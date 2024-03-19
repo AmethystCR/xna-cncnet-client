@@ -82,7 +82,8 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnExCredits_LeftClick(object sender, EventArgs e)
         {
-            ProcessLauncher.StartShellProcess(MainClientConstants.CREDITS_URL);
+            MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+            parent.Show(parent.CreditsWindow);
         }
 
         private void BtnExCancel_LeftClick(object sender, EventArgs e)

@@ -33,6 +33,7 @@ namespace DTAClient.DXGUI.Generic
         public ManualUpdateQueryWindow ManualUpdateQueryWindow;
         public UpdateWindow UpdateWindow;
         public ExtrasWindow ExtrasWindow;
+        public CreditsWindow CreditsWindow;
 
         public override void Initialize()
         {
@@ -64,6 +65,9 @@ namespace DTAClient.DXGUI.Generic
 
             ExtrasWindow = new ExtrasWindow(WindowManager);
             AddChild(ExtrasWindow);
+
+            CreditsWindow = new CreditsWindow(WindowManager);
+            AddChild(CreditsWindow);
 
             foreach (XNAControl child in Children)
             {

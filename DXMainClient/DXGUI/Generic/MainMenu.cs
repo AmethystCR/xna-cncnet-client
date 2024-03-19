@@ -864,7 +864,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnCredits_LeftClick(object sender, EventArgs e)
         {
-            ProcessLauncher.StartShellProcess(MainClientConstants.CREDITS_URL);
+            innerPanel.Show(innerPanel.CreditsWindow);
         }
 
         private void BtnExtras_LeftClick(object sender, EventArgs e) =>
