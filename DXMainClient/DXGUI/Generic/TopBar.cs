@@ -59,6 +59,7 @@ namespace DTAClient.DXGUI.Generic
         private XNAClientButton btnPrivateMessages;
         private XNAClientButton btnOptions;
         private XNAClientButton btnLogout;
+        private XNAClientButton btnConnectStatus;
         private XNALabel lblTime;
         private XNALabel lblDate;
         private XNALabel lblCnCNetStatus;
@@ -180,8 +181,15 @@ namespace DTAClient.DXGUI.Generic
             btnOptions.Text = "Options (F12)".L10N("Client:Main:OptionsF12");
             btnOptions.LeftClick += BtnOptions_LeftClick;
 
+            btnConnectStatus = new XNAClientButton(WindowManager);
+            btnConnectStatus.Name = "btnConnectStatus";
+            btnConnectStatus.ClientRectangle = new Rectangle(btnPrivateMessages.X + 249, 12, 14, 14);
+            btnConnectStatus.AllowClick = false;
+            btnConnectStatus.IdleTexture = AssetLoader.LoadTexture("cs_off.png");
+
             lblConnectionStatus = new XNALabel(WindowManager);
             lblConnectionStatus.Name = "lblConnectionStatus";
+            lblConnectionStatus.ClientRectangle = new Rectangle(btnConnectStatus.X + 18, 11, 0, 0);
             lblConnectionStatus.FontIndex = 1;
             lblConnectionStatus.Text = "OFFLINE".L10N("Client:Main:StatusOffline");
 
@@ -193,13 +201,14 @@ namespace DTAClient.DXGUI.Generic
             AddChild(lblDate);
             AddChild(btnLogout);
             AddChild(lblConnectionStatus);
+            AddChild(btnConnectStatus);
 
             if (ClientConfiguration.Instance.DisplayPlayerCountInTopBar)
             {
                 lblCnCNetStatus = new XNALabel(WindowManager);
                 lblCnCNetStatus.Name = "lblCnCNetStatus";
                 lblCnCNetStatus.FontIndex = 1;
-                lblCnCNetStatus.Text = ClientConfiguration.Instance.LocalGame.ToUpper() + " " + "PLAYERS ONLINE:".L10N("Client:Main:OnlinePlayersNumber");
+                lblCnCNetStatus.Text = "PLAYERS ONLINE:".L10N("Client:Main:OnlinePlayersNumber");
                 lblCnCNetPlayerCount = new XNALabel(WindowManager);
                 lblCnCNetPlayerCount.Name = "lblCnCNetPlayerCount";
                 lblCnCNetPlayerCount.FontIndex = 1;
@@ -212,8 +221,6 @@ namespace DTAClient.DXGUI.Generic
                 cncnetPlayerCountCancellationSource = new CancellationTokenSource();
                 CnCNetPlayerCountTask.InitializeService(cncnetPlayerCountCancellationSource);
             }
-
-            lblConnectionStatus.CenterOnParent();
 
             base.Initialize();
 
@@ -255,35 +262,47 @@ namespace DTAClient.DXGUI.Generic
         private void ConnectionManager_ConnectionLost(object sender, Online.EventArguments.ConnectionLostEventArgs e)
         {
             if (!lanMode)
+            {
                 ConnectionEvent("OFFLINE".L10N("Client:Main:StatusOffline"));
+                btnConnectStatus.IdleTexture = AssetLoader.LoadTexture("cs_off.png");
+            }
         }
 
         private void ConnectionManager_ConnectAttemptFailed(object sender, EventArgs e)
         {
             if (!lanMode)
+            {
                 ConnectionEvent("OFFLINE".L10N("Client:Main:StatusOffline"));
+                btnConnectStatus.IdleTexture = AssetLoader.LoadTexture("cs_off.png");
+            }
         }
 
         private void ConnectionManager_AttemptedServerChanged(object sender, Online.EventArguments.AttemptedServerEventArgs e)
         {
             ConnectionEvent("CONNECTING...".L10N("Client:Main:StatusConnecting"));
+            btnConnectStatus.IdleTexture = AssetLoader.LoadTexture("cs_ing.png");
             BringDown();
         }
 
         private void ConnectionManager_WelcomeMessageReceived(object sender, Online.EventArguments.ServerMessageEventArgs e)
-            => ConnectionEvent("CONNECTED".L10N("Client:Main:StatusConnected"));
+        {
+            ConnectionEvent("CONNECTED".L10N("Client:Main:StatusConnected"));
+            btnConnectStatus.IdleTexture = AssetLoader.LoadTexture("cs_on.png");
+        }
 
         private void ConnectionManager_Disconnected(object sender, EventArgs e)
         {
             btnLogout.AllowClick = false;
             if (!lanMode)
+            {
                 ConnectionEvent("OFFLINE".L10N("Client:Main:StatusOffline"));
+                btnConnectStatus.IdleTexture = AssetLoader.LoadTexture("cs_off.png");
+            }
         }
 
         private void ConnectionEvent(string text)
         {
             lblConnectionStatus.Text = text;
-            lblConnectionStatus.CenterOnParent();
             isDown = true;
             downTime = TimeSpan.FromSeconds(DOWN_TIME_WAIT_SECONDS - EVENT_DOWN_TIME_WAIT_SECONDS);
         }
@@ -404,9 +423,15 @@ namespace DTAClient.DXGUI.Generic
             this.lanMode = lanMode;
             SetSwitchButtonsClickable(!lanMode);
             if (lanMode)
+            {
                 ConnectionEvent("LAN MODE".L10N("Client:Main:StatusLanMode"));
+                btnConnectStatus.IdleTexture = AssetLoader.LoadTexture("cs_lan.png");
+            }
             else
+            {
                 ConnectionEvent("OFFLINE".L10N("Client:Main:StatusOffline"));
+                btnConnectStatus.IdleTexture = AssetLoader.LoadTexture("cs_off.png");
+            }
         }
 
         public override void Update(GameTime gameTime)
