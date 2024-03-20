@@ -142,6 +142,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private XNAContextMenuItem toggleExtraTexturesItem;
         private XNAClientButton btnToggleFavoriteMap;
         private XNAClientButton btnToggleExtraTextures;
+        private XNAClientButton btnToggleFullScreenMap;
+        private XNAClientButton btnToggleResizeScreenMap;
 
         private CoopBriefingBox briefingBox;
 
@@ -163,11 +165,15 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         public EventHandler ToggleFavorite;
 
+        public EventHandler ToggleFullScreen;
+
+        public EventHandler ToggleResizeScreen;
+
         public override void Initialize()
         {
             EnableStartLocationSelection = true;
 
-            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 1, 1);
+            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 200), 1, 1);
 #if !GL
 
             disposeTextures = !UserINISettings.Instance.PreloadMapPreviews;
@@ -214,6 +220,18 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             btnToggleExtraTextures.ToolTipText = "Toggle Extra Icons".L10N("Client:Main:ToggleExtraIcons");
             btnToggleExtraTextures.Disable();
 
+            btnToggleFullScreenMap = new XNAClientButton(WindowManager);
+            btnToggleFullScreenMap.IdleTexture = AssetLoader.LoadTexture("ScreenMapL.png");
+            btnToggleFullScreenMap.HoverTexture = AssetLoader.LoadTexture("ScreenMapL_c.png");
+            btnToggleFullScreenMap.LeftClick += (sender, args) => ToggleFullScreen?.Invoke(sender, args);
+            btnToggleFullScreenMap.ToolTipText = "Toggle FullScreen Map".L10N("Client:Main:ToggleFullScreenMap");
+
+            btnToggleResizeScreenMap = new XNAClientButton(WindowManager);
+            btnToggleResizeScreenMap.IdleTexture = AssetLoader.LoadTexture("ScreenMapS.png");
+            btnToggleResizeScreenMap.HoverTexture = AssetLoader.LoadTexture("ScreenMapS_c.png");
+            btnToggleResizeScreenMap.LeftClick += (sender, args) => ToggleResizeScreen?.Invoke(sender, args);
+            btnToggleResizeScreenMap.ToolTipText = "Toggle ResizeScreen Map".L10N("Client:Main:ToggleResizeScreenMap");
+
             AddChild(mapContextMenu);
             mapContextMenu.Disable();
 
@@ -229,6 +247,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             AddChild(btnToggleFavoriteMap);
             AddChild(btnToggleExtraTextures);
+            AddChild(btnToggleFullScreenMap);
+            AddChild(btnToggleResizeScreenMap);
         }
 
         private void MapPreviewBox_RightClick(object sender, EventArgs e)
@@ -501,10 +521,28 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 btnToggleExtraTextures.Disable();
             }
 
-            btnToggleFavoriteMap.ClientRectangle = new Rectangle(buttonX - 22, 4, 18, 18);
-
+            btnToggleFavoriteMap.ClientRectangle = new Rectangle(4, 4, 18, 18);
+            btnToggleFullScreenMap.ClientRectangle = new Rectangle(buttonX - 22, 4, 18, 18);
+            btnToggleResizeScreenMap.ClientRectangle = new Rectangle(buttonX - 22, 4, 18, 18);
+            RefreshToggleResizeScreenMapBtn();
             RefreshExtraTexturesBtn();
             RefreshFavoriteBtn();
+        }
+
+        public void RefreshToggleFullScreenMapBtn()
+        {
+            btnToggleFullScreenMap.Disable();
+            btnToggleFullScreenMap.Visible = false;
+            btnToggleResizeScreenMap.Enable();
+            btnToggleResizeScreenMap.Visible = true;
+        }
+
+        public void RefreshToggleResizeScreenMapBtn()
+        {
+            btnToggleResizeScreenMap.Disable();
+            btnToggleResizeScreenMap.Visible = false;
+            btnToggleFullScreenMap.Enable();
+            btnToggleFullScreenMap.Visible = true;
         }
 
         public void RefreshFavoriteBtn()

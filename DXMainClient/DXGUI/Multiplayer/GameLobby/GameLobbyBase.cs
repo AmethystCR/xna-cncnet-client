@@ -228,6 +228,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             MapPreviewBox = FindChild<MapPreviewBox>("MapPreviewBox");
             MapPreviewBox.SetFields(Players, AIPlayers, MPColors, GameOptionsIni.GetStringValue("General", "Sides", String.Empty).Split(','), GameOptionsIni);
             MapPreviewBox.ToggleFavorite += MapPreviewBox_ToggleFavorite;
+            MapPreviewBox.ToggleFullScreen += MapPreviewBox_ToggleFullScreen;
+            MapPreviewBox.ToggleResizeScreen += MapPreviewBox_ToggleResizeScreen;
 
             lblMapName = FindChild<XNALabel>(nameof(lblMapName));
             lblMapAuthor = FindChild<XNALabel>(nameof(lblMapAuthor));
@@ -316,7 +318,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             ddFilTheater.AddItem("TEMPERATE");
             ddFilTheater.AddItem("DESERT");
             ddFilTheater.AddItem("SNOW");
-            ddFilTheater.AddItem("LUNAR");			
+            ddFilTheater.AddItem("LUNAR");
             ddFilTheater.AddItem("URBAN");
             ddFilTheater.AddItem("NEWURBAN");
             ddFilTheater.AllowDropDown = true;
@@ -739,6 +741,37 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             GameModeMap.IsFavorite = UserINISettings.Instance.ToggleFavoriteMap(Map.UntranslatedName, GameMode.Name, GameModeMap.IsFavorite);
             MapPreviewBox.RefreshFavoriteBtn();
+        }
+
+        private void MapPreviewBox_ToggleFullScreen(object sender, EventArgs e) =>
+            ToggleFullScreenMap();
+
+        protected virtual void ToggleFullScreenMap()
+        {
+            int fsmLocX = ConfigIni.GetIntValue(Name, "FsmLocX", 0);
+            int fsmLocY = ConfigIni.GetIntValue(Name, "FsmLocY", 0);
+            int fsmSizeX = ConfigIni.GetIntValue(Name, "FsmSizeX", 1280);
+            int fsmSizeY = ConfigIni.GetIntValue(Name, "FsmSizeY", 800);
+            MapPreviewBox.ClientRectangle = new Rectangle(fsmLocX, fsmLocY, fsmSizeX, fsmSizeY);
+            MapPreviewBox.DrawOrder = 1;
+            MapPreviewBox.UpdateOrder = 1;
+            MapPreviewBox.CenterOnParent();
+            MapPreviewBox.RefreshToggleFullScreenMapBtn();
+        }
+
+        private void MapPreviewBox_ToggleResizeScreen(object sender, EventArgs e) =>
+            ToggleResizeScreenMap();
+
+        protected virtual void ToggleResizeScreenMap()
+        {
+            int rsmLocX = ConfigIni.GetIntValue(Name, "RsmLocX", 418);
+            int rsmLocY = ConfigIni.GetIntValue(Name, "RsmLocY", 310);
+            int rsmSizeX = ConfigIni.GetIntValue(Name, "RsmSizeX", 850);
+            int rsmSizeY = ConfigIni.GetIntValue(Name, "RsmSizeY", 424);
+            MapPreviewBox.ClientRectangle = new Rectangle(rsmLocX, rsmLocY, rsmSizeX, rsmSizeY);
+            MapPreviewBox.DrawOrder = 0;
+            MapPreviewBox.UpdateOrder = 0;
+            MapPreviewBox.RefreshToggleResizeScreenMapBtn();
         }
 
         protected void RefreshForFavoriteMapRemoved()
