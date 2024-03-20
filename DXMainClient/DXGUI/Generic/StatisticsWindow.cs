@@ -24,6 +24,7 @@ namespace DTAClient.DXGUI.Generic
 
         private XNAPanel panelGameStatistics;
         private XNAPanel panelTotalStatistics;
+        private XNAPanel panelAchStatistics;
 
         private XNAClientDropDown cmbGameModeFilter;
         private XNAClientDropDown cmbGameClassFilter;
@@ -48,6 +49,8 @@ namespace DTAClient.DXGUI.Generic
         private const int TOTAL_STATS_Y_INCREASE = 45;
         private const int TOTAL_STATS_FIRST_ITEM_Y = 20;
 
+        private const string Success = "100%";
+
         // Controls for total statistics
 
         private XNALabel lblGamesStartedValue;
@@ -71,6 +74,26 @@ namespace DTAClient.DXGUI.Generic
 
         // *****************************
 
+        private Double[,] Value;
+
+        private XNAProgressBar PrghardenedValue;
+        private XNAProgressBar PrgkillValue;
+        private XNAProgressBar PrgVictorValue;
+        private XNAProgressBar PrgSoldierValue;
+        private XNAProgressBar PrgLongValue;
+        private XNAProgressBar PrgShortValue;
+        private XNAProgressBar PrgNavalValue;
+        private XNAProgressBar PrgGermanyValue;
+        private XNAProgressBar PrgOneValue;
+        private XNAProgressBar PrgBulletsValue;
+        private XNAProgressBar PrgFkyValue;
+        private XNAProgressBar PrgMaxValue;
+        private XNAProgressBar PrgMinValue;
+        private XNAProgressBar PrgMaginotValue;
+        private XNAProgressBar PrgBtValue;
+		
+        //*******************************
+
         private StatisticsManager sm;
         private MapLoader mapLoader;
         private List<int> listedGameIndexes = new List<int>();
@@ -78,6 +101,8 @@ namespace DTAClient.DXGUI.Generic
         private (string Name, string UIName)[] sides;
 
         private List<MultiplayerColor> mpColors;
+
+        protected IniFile StatisticsWindowIni { get; private set; }
 
         public override void Initialize()
         {
@@ -91,6 +116,14 @@ namespace DTAClient.DXGUI.Generic
                 strLblAvgEconomy = "Avg. number of objects built:".L10N("Client:Main:StatisticBuildCountAvg");
             }
 
+            StatisticsWindowIni = new IniFile(SafePath.CombineFilePath(ProgramConstants.GetResourcePath(), "StatisticsWindow.ini"));
+            int totalstatslocationx1 = StatisticsWindowIni.GetIntValue("StatisticsWindow", "TotalStatsLocationX1", TOTAL_STATS_LOCATION_X1);
+            int totalstatsvaluelocationx1 = StatisticsWindowIni.GetIntValue("StatisticsWindow", "TotalStatsValueLocationX1", TOTAL_STATS_VALUE_LOCATION_X1);
+            int totalstatslocationx2 = StatisticsWindowIni.GetIntValue("StatisticsWindow", "TotalStatsLocationX2", TOTAL_STATS_LOCATION_X2);
+            int totalstatsvaluelocationx2 = StatisticsWindowIni.GetIntValue("StatisticsWindow", "TotalStatsValueLocationX2", TOTAL_STATS_VALUE_LOCATION_X2);
+            int totalstatsyincrease = StatisticsWindowIni.GetIntValue("StatisticsWindow", "TotalStatsYIncrease", TOTAL_STATS_Y_INCREASE);
+            int totalstatsfirstitemy = StatisticsWindowIni.GetIntValue("StatisticsWindow", "TotalStatsFirstItemY", TOTAL_STATS_FIRST_ITEM_Y);
+
             Name = "StatisticsWindow";
             BackgroundTexture = AssetLoader.LoadTexture("scoreviewerbg.png");
             ClientRectangle = new Rectangle(0, 0, 700, 521);
@@ -102,6 +135,7 @@ namespace DTAClient.DXGUI.Generic
             tabControl.FontIndex = 1;
             tabControl.AddTab("Game Statistics".L10N("Client:Main:GameStatistic"), UIDesignConstants.BUTTON_WIDTH_133);
             tabControl.AddTab("Total Statistics".L10N("Client:Main:TotalStatistic"), UIDesignConstants.BUTTON_WIDTH_133);
+            tabControl.AddTab("Achievement".L10N("Client:Main:Achievement"), UIDesignConstants.BUTTON_WIDTH_133);
             tabControl.SelectedIndexChanged += TabControl_SelectedIndexChanged;
 
             XNALabel lblFilter = new XNALabel(WindowManager);
@@ -218,155 +252,155 @@ namespace DTAClient.DXGUI.Generic
             panelTotalStatistics.Visible = false;
             panelTotalStatistics.Enabled = false;
 
-            int locationY = TOTAL_STATS_FIRST_ITEM_Y;
+            int locationY = totalstatsfirstitemy;
 
-            AddTotalStatisticsLabel("lblGamesStarted", "Games started:".L10N("Client:Main:StatisticsGamesStarted"), new Point(TOTAL_STATS_LOCATION_X1, locationY));
+            AddTotalStatisticsLabel("lblGamesStarted", "Games started:".L10N("Client:Main:StatisticsGamesStarted"), new Point(totalstatslocationx1, locationY));
 
             lblGamesStartedValue = new XNALabel(WindowManager);
             lblGamesStartedValue.Name = "lblGamesStartedValue";
-            lblGamesStartedValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X1, locationY, 0, 0);
+            lblGamesStartedValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1, locationY, 0, 0);
             lblGamesStartedValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblGamesFinished", "Games finished:".L10N("Client:Main:StatisticsGamesFinished"), new Point(TOTAL_STATS_LOCATION_X1, locationY));
+            AddTotalStatisticsLabel("lblGamesFinished", "Games finished:".L10N("Client:Main:StatisticsGamesFinished"), new Point(totalstatslocationx1, locationY));
 
             lblGamesFinishedValue = new XNALabel(WindowManager);
             lblGamesFinishedValue.Name = "lblGamesFinishedValue";
-            lblGamesFinishedValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X1, locationY, 0, 0);
+            lblGamesFinishedValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1, locationY, 0, 0);
             lblGamesFinishedValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblWins", "Wins:".L10N("Client:Main:StatisticsGamesWins"), new Point(TOTAL_STATS_LOCATION_X1, locationY));
+            AddTotalStatisticsLabel("lblWins", "Wins:".L10N("Client:Main:StatisticsGamesWins"), new Point(totalstatslocationx1, locationY));
 
             lblWinsValue = new XNALabel(WindowManager);
             lblWinsValue.Name = "lblWinsValue";
-            lblWinsValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X1, locationY, 0, 0);
+            lblWinsValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1, locationY, 0, 0);
             lblWinsValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblLosses", "Losses:".L10N("Client:Main:StatisticsGamesLosses"), new Point(TOTAL_STATS_LOCATION_X1, locationY));
+            AddTotalStatisticsLabel("lblLosses", "Losses:".L10N("Client:Main:StatisticsGamesLosses"), new Point(totalstatslocationx1, locationY));
 
             lblLossesValue = new XNALabel(WindowManager);
             lblLossesValue.Name = "lblLossesValue";
-            lblLossesValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X1, locationY, 0, 0);
+            lblLossesValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1, locationY, 0, 0);
             lblLossesValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblWinLossRatio", "Win / Loss ratio:".L10N("Client:Main:StatisticsGamesWinLossRatio"), new Point(TOTAL_STATS_LOCATION_X1, locationY));
+            AddTotalStatisticsLabel("lblWinLossRatio", "Win / Loss ratio:".L10N("Client:Main:StatisticsGamesWinLossRatio"), new Point(totalstatslocationx1, locationY));
 
             lblWinLossRatioValue = new XNALabel(WindowManager);
             lblWinLossRatioValue.Name = "lblWinLossRatioValue";
-            lblWinLossRatioValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X1, locationY, 0, 0);
+            lblWinLossRatioValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1, locationY, 0, 0);
             lblWinLossRatioValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblAverageGameLength", "Average game length:".L10N("Client:Main:StatisticsGamesLengthAvg"), new Point(TOTAL_STATS_LOCATION_X1, locationY));
+            AddTotalStatisticsLabel("lblAverageGameLength", "Average game length:".L10N("Client:Main:StatisticsGamesLengthAvg"), new Point(totalstatslocationx1, locationY));
 
             lblAverageGameLengthValue = new XNALabel(WindowManager);
             lblAverageGameLengthValue.Name = "lblAverageGameLengthValue";
-            lblAverageGameLengthValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X1, locationY, 0, 0);
+            lblAverageGameLengthValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1, locationY, 0, 0);
             lblAverageGameLengthValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblTotalTimePlayed", "Total time played:".L10N("Client:Main:StatisticsTotalTimePlayed"), new Point(TOTAL_STATS_LOCATION_X1, locationY));
+            AddTotalStatisticsLabel("lblTotalTimePlayed", "Total time played:".L10N("Client:Main:StatisticsTotalTimePlayed"), new Point(totalstatslocationx1, locationY));
 
             lblTotalTimePlayedValue = new XNALabel(WindowManager);
             lblTotalTimePlayedValue.Name = "lblTotalTimePlayedValue";
-            lblTotalTimePlayedValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X1, locationY, 0, 0);
+            lblTotalTimePlayedValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1, locationY, 0, 0);
             lblTotalTimePlayedValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblAverageEnemyCount", "Average number of enemies:".L10N("Client:Main:StatisticsEnemiesAvg"), new Point(TOTAL_STATS_LOCATION_X1, locationY));
+            AddTotalStatisticsLabel("lblAverageEnemyCount", "Average number of enemies:".L10N("Client:Main:StatisticsEnemiesAvg"), new Point(totalstatslocationx1, locationY));
 
             lblAverageEnemyCountValue = new XNALabel(WindowManager);
             lblAverageEnemyCountValue.Name = "lblAverageEnemyCountValue";
-            lblAverageEnemyCountValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X1, locationY, 0, 0);
+            lblAverageEnemyCountValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1, locationY, 0, 0);
             lblAverageEnemyCountValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblAverageAllyCount", "Average number of allies:".L10N("Client:Main:StatisticsAlliesAvg"), new Point(TOTAL_STATS_LOCATION_X1, locationY));
+            AddTotalStatisticsLabel("lblAverageAllyCount", "Average number of allies:".L10N("Client:Main:StatisticsAlliesAvg"), new Point(totalstatslocationx1, locationY));
 
             lblAverageAllyCountValue = new XNALabel(WindowManager);
             lblAverageAllyCountValue.Name = "lblAverageAllyCountValue";
-            lblAverageAllyCountValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X1, locationY, 0, 0);
+            lblAverageAllyCountValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1, locationY, 0, 0);
             lblAverageAllyCountValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
             // SECOND COLUMN
 
-            locationY = TOTAL_STATS_FIRST_ITEM_Y;
+            locationY = totalstatsfirstitemy;
 
-            AddTotalStatisticsLabel("lblTotalKills", "Total kills:".L10N("Client:Main:StatisticsTotalKills"), new Point(TOTAL_STATS_LOCATION_X2, locationY));
+            AddTotalStatisticsLabel("lblTotalKills", "Total kills:".L10N("Client:Main:StatisticsTotalKills"), new Point(totalstatslocationx2, locationY));
 
             lblTotalKillsValue = new XNALabel(WindowManager);
             lblTotalKillsValue.Name = "lblTotalKillsValue";
-            lblTotalKillsValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X2, locationY, 0, 0);
+            lblTotalKillsValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2, locationY, 0, 0);
             lblTotalKillsValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblKillsPerGame", "Kills / game:".L10N("Client:Main:StatisticsKillsPerGame"), new Point(TOTAL_STATS_LOCATION_X2, locationY));
+            AddTotalStatisticsLabel("lblKillsPerGame", "Kills / game:".L10N("Client:Main:StatisticsKillsPerGame"), new Point(totalstatslocationx2, locationY));
 
             lblKillsPerGameValue = new XNALabel(WindowManager);
             lblKillsPerGameValue.Name = "lblKillsPerGameValue";
-            lblKillsPerGameValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X2, locationY, 0, 0);
+            lblKillsPerGameValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2, locationY, 0, 0);
             lblKillsPerGameValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblTotalLosses", "Total losses:".L10N("Client:Main:StatisticsTotalLosses"), new Point(TOTAL_STATS_LOCATION_X2, locationY));
+            AddTotalStatisticsLabel("lblTotalLosses", "Total losses:".L10N("Client:Main:StatisticsTotalLosses"), new Point(totalstatslocationx2, locationY));
 
             lblTotalLossesValue = new XNALabel(WindowManager);
             lblTotalLossesValue.Name = "lblTotalLossesValue";
-            lblTotalLossesValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X2, locationY, 0, 0);
+            lblTotalLossesValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2, locationY, 0, 0);
             lblTotalLossesValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblLossesPerGame", "Losses / game:".L10N("Client:Main:StatisticsLossesPerGame"), new Point(TOTAL_STATS_LOCATION_X2, locationY));
+            AddTotalStatisticsLabel("lblLossesPerGame", "Losses / game:".L10N("Client:Main:StatisticsLossesPerGame"), new Point(totalstatslocationx2, locationY));
 
             lblLossesPerGameValue = new XNALabel(WindowManager);
             lblLossesPerGameValue.Name = "lblLossesPerGameValue";
-            lblLossesPerGameValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X2, locationY, 0, 0);
+            lblLossesPerGameValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2, locationY, 0, 0);
             lblLossesPerGameValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblKillLossRatio", "Kill / loss ratio:".L10N("Client:Main:StatisticsKillLossRatio"), new Point(TOTAL_STATS_LOCATION_X2, locationY));
+            AddTotalStatisticsLabel("lblKillLossRatio", "Kill / loss ratio:".L10N("Client:Main:StatisticsKillLossRatio"), new Point(totalstatslocationx2, locationY));
 
             lblKillLossRatioValue = new XNALabel(WindowManager);
             lblKillLossRatioValue.Name = "lblKillLossRatioValue";
-            lblKillLossRatioValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X2, locationY, 0, 0);
+            lblKillLossRatioValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2, locationY, 0, 0);
             lblKillLossRatioValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblTotalScore", "Total score:".L10N("Client:Main:TotalScore"), new Point(TOTAL_STATS_LOCATION_X2, locationY));
+            AddTotalStatisticsLabel("lblTotalScore", "Total score:".L10N("Client:Main:TotalScore"), new Point(totalstatslocationx2, locationY));
 
             lblTotalScoreValue = new XNALabel(WindowManager);
             lblTotalScoreValue.Name = "lblTotalScoreValue";
-            lblTotalScoreValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X2, locationY, 0, 0);
+            lblTotalScoreValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2, locationY, 0, 0);
             lblTotalScoreValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblAverageEconomy", strLblAvgEconomy, new Point(TOTAL_STATS_LOCATION_X2, locationY));
+            AddTotalStatisticsLabel("lblAverageEconomy", strLblAvgEconomy, new Point(totalstatslocationx2, locationY));
 
             lblAverageEconomyValue = new XNALabel(WindowManager);
             lblAverageEconomyValue.Name = "lblAverageEconomyValue";
-            lblAverageEconomyValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X2, locationY, 0, 0);
+            lblAverageEconomyValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2, locationY, 0, 0);
             lblAverageEconomyValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblFavouriteSide", "Favourite side:".L10N("Client:Main:FavouriteSide"), new Point(TOTAL_STATS_LOCATION_X2, locationY));
+            AddTotalStatisticsLabel("lblFavouriteSide", "Favourite side:".L10N("Client:Main:FavouriteSide"), new Point(totalstatslocationx2, locationY));
 
             lblFavouriteSideValue = new XNALabel(WindowManager);
             lblFavouriteSideValue.Name = "lblFavouriteSideValue";
-            lblFavouriteSideValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X2, locationY, 0, 0);
+            lblFavouriteSideValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2, locationY, 0, 0);
             lblFavouriteSideValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
-            AddTotalStatisticsLabel("lblAverageAILevel", "Average AI level:".L10N("Client:Main:AvgAILevel"), new Point(TOTAL_STATS_LOCATION_X2, locationY));
+            AddTotalStatisticsLabel("lblAverageAILevel", "Average AI level:".L10N("Client:Main:AvgAILevel"), new Point(totalstatslocationx2, locationY));
 
             lblAverageAILevelValue = new XNALabel(WindowManager);
             lblAverageAILevelValue.Name = "lblAverageAILevelValue";
-            lblAverageAILevelValue.ClientRectangle = new Rectangle(TOTAL_STATS_VALUE_LOCATION_X2, locationY, 0, 0);
+            lblAverageAILevelValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2, locationY, 0, 0);
             lblAverageAILevelValue.RemapColor = UISettings.ActiveSettings.AltColor;
-            locationY += TOTAL_STATS_Y_INCREASE;
+            locationY += totalstatsyincrease;
 
             panelTotalStatistics.AddChild(lblGamesStartedValue);
             panelTotalStatistics.AddChild(lblGamesFinishedValue);
@@ -387,6 +421,154 @@ namespace DTAClient.DXGUI.Generic
             panelTotalStatistics.AddChild(lblAverageEconomyValue);
             panelTotalStatistics.AddChild(lblFavouriteSideValue);
             panelTotalStatistics.AddChild(lblAverageAILevelValue);
+
+            panelAchStatistics = new XNAPanel(WindowManager);
+            panelAchStatistics.Name = "panelAchStatistics";
+            panelAchStatistics.BackgroundTexture = AssetLoader.LoadTexture("scoreviewerpanelbg.png");
+            panelAchStatistics.ClientRectangle = new Rectangle(10, 55, 680, 425);
+            Value = new Double[15, 2];
+            AddChild(panelAchStatistics);
+            panelAchStatistics.Visible = false;
+            panelAchStatistics.Enabled = false;
+
+            locationY = totalstatsfirstitemy;
+
+            Value[0, 1] = 2000;
+            PrghardenedValue = new XNAProgressBar(WindowManager);
+            PrghardenedValue.Name = "PrghardenedValue";
+            PrghardenedValue.Maximum = (int)Value[0, 1];
+            PrghardenedValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1 - 110, locationY - 4, 200, 25);
+            locationY += totalstatsyincrease;
+
+            Value[1, 1] = 1000000;
+            PrgkillValue = new XNAProgressBar(WindowManager);
+            PrgkillValue.Name = "PrgkillValue";
+            PrgkillValue.Maximum = (int)Value[1, 1];
+            PrgkillValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1 - 110, locationY - 4, 200, 25);
+            PrgkillValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[2, 1] = 10;
+            PrgVictorValue = new XNAProgressBar(WindowManager);
+            PrgVictorValue.Name = "PrgVictorValue";
+            PrgVictorValue.Maximum = (int)Value[2, 1];
+            PrgVictorValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1 - 110, locationY - 4, 200, 25);
+            PrgVictorValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[3, 1] = 200;
+            PrgLongValue = new XNAProgressBar(WindowManager);
+            PrgLongValue.Name = "PrgLongValue";
+            PrgLongValue.Maximum = (int)Value[3, 1];
+            PrgLongValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1 - 110, locationY - 4, 200, 25);
+            PrgLongValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[4, 1] = 200;
+            PrgShortValue = new XNAProgressBar(WindowManager);
+            PrgShortValue.Name = "PrgShortValue";
+            PrgShortValue.Maximum = (int)Value[4, 1];
+            PrgShortValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1 - 110, locationY - 4, 200, 25);
+            PrgShortValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[5, 1] = 200;
+            PrgSoldierValue = new XNAProgressBar(WindowManager);
+            PrgSoldierValue.Name = "PrgSoldierValue";
+            PrgSoldierValue.Maximum = (int)Value[5, 1];
+            PrgSoldierValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1 - 110, locationY - 4, 200, 25);
+            PrgSoldierValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[6, 1] = 10;
+            PrgNavalValue = new XNAProgressBar(WindowManager);
+            PrgNavalValue.Name = "PrgNavalValue";
+            PrgNavalValue.Maximum = (int)Value[6, 1];
+            PrgNavalValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1 - 110, locationY - 4, 200, 25);
+            PrgNavalValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[7, 1] = 20;
+            PrgGermanyValue = new XNAProgressBar(WindowManager);
+            PrgGermanyValue.Name = "PrgGermanyValue";
+            PrgGermanyValue.Maximum = (int)Value[7, 1];
+            PrgGermanyValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1 - 110, locationY - 4, 200, 25);
+            PrgGermanyValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[8, 1] = 200;
+            PrgOneValue = new XNAProgressBar(WindowManager);
+            PrgOneValue.Name = " PrgOneValue";
+            PrgOneValue.Maximum = (int)Value[8, 1];
+            PrgOneValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx1 - 110, locationY - 4, 200, 25);
+            PrgOneValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            locationY = totalstatsfirstitemy;
+
+            Value[9, 1] = 200;
+            PrgBulletsValue = new XNAProgressBar(WindowManager);
+            PrgBulletsValue.Name = "PrgBulletsValue";
+            PrgBulletsValue.Maximum = (int)Value[9, 1];
+            PrgBulletsValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2 - 110, locationY - 4, 200, 25);
+            PrgBulletsValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[10, 1] = 20;
+            PrgFkyValue = new XNAProgressBar(WindowManager);
+            PrgFkyValue.Name = "PrgFkyValue";
+            PrgFkyValue.Maximum = (int)Value[10, 1];
+            PrgFkyValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2 - 110, locationY - 4, 200, 25);
+            PrgFkyValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[11, 1] = 100;
+            PrgMaxValue = new XNAProgressBar(WindowManager);
+            PrgMaxValue.Name = "PrgMaxValue";
+            PrgMaxValue.Maximum = (int)Value[11, 1];
+            PrgMaxValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2 - 110, locationY - 4, 200, 25);
+            PrgMaxValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[12, 1] = 100;
+            PrgMinValue = new XNAProgressBar(WindowManager);
+            PrgMinValue.Name = "PrgMinValue";
+            PrgMinValue.Maximum = (int)Value[12, 1];
+            PrgMinValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2 - 110, locationY - 4, 200, 25);
+            PrgMinValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[13, 1] = 20;
+            PrgMaginotValue = new XNAProgressBar(WindowManager);
+            PrgMaginotValue.Name = "PrgMaginotValue";
+            PrgMaginotValue.Maximum = (int)Value[13, 1];
+            PrgMaginotValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2 - 110, locationY - 4, 200, 25);
+            PrgMaginotValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            Value[14, 1] = 20;
+            PrgBtValue = new XNAProgressBar(WindowManager);
+            PrgBtValue.Name = "PrgBtValue";
+            PrgBtValue.Maximum = (int)Value[14, 1];
+            PrgBtValue.ClientRectangle = new Rectangle(totalstatsvaluelocationx2 - 110, locationY - 4, 200, 25);
+            PrgBtValue.RemapColor = UISettings.ActiveSettings.AltColor;
+            locationY += totalstatsyincrease;
+
+            panelAchStatistics.AddChild(PrghardenedValue);
+            panelAchStatistics.AddChild(PrgkillValue);
+            panelAchStatistics.AddChild(PrgVictorValue);
+            panelAchStatistics.AddChild(PrgSoldierValue);
+            panelAchStatistics.AddChild(PrgLongValue);
+            panelAchStatistics.AddChild(PrgShortValue);
+            panelAchStatistics.AddChild(PrgNavalValue);
+            panelAchStatistics.AddChild(PrgGermanyValue);
+            panelAchStatistics.AddChild(PrgOneValue);
+            panelAchStatistics.AddChild(PrgBulletsValue);
+            panelAchStatistics.AddChild(PrgFkyValue);
+            panelAchStatistics.AddChild(PrgMaxValue);
+            panelAchStatistics.AddChild(PrgMinValue);
+            panelAchStatistics.AddChild(PrgMaginotValue);
+            panelAchStatistics.AddChild(PrgBtValue);
 
 #endregion
 
@@ -418,6 +600,38 @@ namespace DTAClient.DXGUI.Generic
             ListGames();
 
             StatisticsManager.Instance.GameAdded += Instance_GameAdded;
+
+            locationY = totalstatsfirstitemy;
+            AddAchBtn("btnhardened", "hardenedTitle".L10N("Client:Main:hardenedTitle"), "hardenedText".L10N("Client:Main:hardenedText"), new Point(totalstatslocationx1, locationY), 0);
+            locationY += totalstatsyincrease;
+            AddAchBtn("lblkillValue", "killTitle".L10N("Client:Main:killTitle"), "killText".L10N("Client:Main:killText"), new Point(totalstatslocationx1, locationY), 1);
+            locationY += totalstatsyincrease;
+            AddAchBtn("PrgVictorValue", "VictorTitle".L10N("Client:Main:VictorTitle"), "VictorText".L10N("Client:Main:VictorText"), new Point(totalstatslocationx1, locationY), 2);
+            locationY += totalstatsyincrease;
+            AddAchBtn("PrgLongValue", "LongTitle".L10N("Client:Main:LongTitle"), "LongText".L10N("Client:Main:LongText"), new Point(totalstatslocationx1, locationY), 3);
+            locationY += totalstatsyincrease;
+            AddAchBtn("PrgShortValue", "ShortTitle".L10N("Client:Main:ShortTitle"), "ShortText".L10N("Client:Main:ShortText"), new Point(totalstatslocationx1, locationY), 4);
+            locationY += totalstatsyincrease;
+            AddAchBtn("PrgSoldierValue", "SoldierTitle".L10N("Client:Main:SoldierTitle"), "SoldierText".L10N("Client:Main:SoldierText"), new Point(totalstatslocationx1, locationY), 5);
+            locationY += totalstatsyincrease;
+            AddAchBtn("PrgNavalValue", "NavalTitle".L10N("Client:Main:NavalTitle"), "NavalText".L10N("Client:Main:NavalText"), new Point(totalstatslocationx1, locationY), 6);
+            locationY += totalstatsyincrease;
+            AddAchBtn("PrgGermanyValue", "GermanyTitle".L10N("Client:Main:GermanyTitle"), "GermanyText".L10N("Client:Main:GermanyText"), new Point(totalstatslocationx1, locationY), 7);
+            locationY += totalstatsyincrease;
+            AddAchBtn(" PrgOneValue", "OneTitle".L10N("Client:Main:OneTitle"), "OneText".L10N("Client:Main:OneText"), new Point(totalstatslocationx1, locationY), 8);
+            locationY = totalstatsfirstitemy;
+            AddAchBtn("PrgBulletsValue", "BulletsTitle".L10N("Client:Main:BulletsTitle"), "BulletsText".L10N("Client:Main:BulletsText"), new Point(totalstatslocationx2, locationY), 9);
+            locationY += totalstatsyincrease;
+            AddAchBtn("PrgFkyValue", "FkyTitle".L10N("Client:Main:FkyTitle"), "FkyText".L10N("Client:Main:FkyText"), new Point(totalstatslocationx2, locationY), 10);
+            locationY += totalstatsyincrease;
+            AddAchBtn("PrgMaxValue", "MaxTitle".L10N("Client:Main:MaxTitle"), "MaxText".L10N("Client:Main:MaxText"), new Point(totalstatslocationx2, locationY), 11);
+            locationY += totalstatsyincrease;
+            AddAchBtn("PrgMaxValue", "MinTitle".L10N("Client:Main:MinTitle"), "MinText".L10N("Client:Main:MinText"), new Point(totalstatslocationx2, locationY), 12);
+            locationY += totalstatsyincrease;
+            AddAchBtn("PrgMaginotValue", "MaginotTitle".L10N("Client:Main:MaginotTitle"), "MaginotText".L10N("Client:Main:MaginotText"), new Point(totalstatslocationx2, locationY), 13);
+            locationY += totalstatsyincrease;
+            AddAchBtn("PrgBtValue", "BtTitle".L10N("Client:Main:BtTitle"), "BtText".L10N("Client:Main:BtText"), new Point(totalstatslocationx2, locationY),14);
+            locationY += totalstatsyincrease;
         }
 
         private void Instance_GameAdded(object sender, EventArgs e)
@@ -439,6 +653,29 @@ namespace DTAClient.DXGUI.Generic
             panelTotalStatistics.AddChild(label);
         }
 
+        private void AddAchBtn(string name, string Title, string Content, Point location, int i)
+        {
+            XNAButton btn = new XNAClientButton(WindowManager);
+            btn.Name = name;
+            btn.Text = Title;
+            btn.ClientRectangle = new Rectangle(location.X - 25, location.Y - 5, 100, 30);
+            btn.IdleTexture = AssetLoader.LoadTexture("92pxbtn.png");
+            btn.HoverTexture = AssetLoader.LoadTexture("92pxbtn_c.png");
+            if (Value[i, 0] < Value[i, 1])
+                Content += "          " + Value[i, 0].ToString() + "/" + Value[i, 1].ToString();
+            else
+                Content += "          100%".L10N("Client:Main:100%");
+            btn.LeftClick += (s, e) => Messagebox(Title, Content);
+            panelAchStatistics.AddChild(btn);
+
+        }
+
+        private void Messagebox(string Title, string Content)
+        {
+            XNAMessageBox messageBox = new XNAMessageBox(WindowManager, Title, Content, XNAMessageBoxButtons.OK);
+            messageBox.Show();
+        }
+
         private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (tabControl.SelectedTab == 1)
@@ -447,6 +684,17 @@ namespace DTAClient.DXGUI.Generic
                 panelGameStatistics.Enabled = false;
                 panelTotalStatistics.Visible = true;
                 panelTotalStatistics.Enabled = true;
+                panelAchStatistics.Visible = false;
+                panelAchStatistics.Enabled = false;
+            }
+            else if (tabControl.SelectedTab == 2)
+            {
+                panelGameStatistics.Visible = false;
+                panelGameStatistics.Enabled = false;
+                panelTotalStatistics.Visible = false;
+                panelTotalStatistics.Enabled = false;
+                panelAchStatistics.Visible = true;
+                panelAchStatistics.Enabled = true;
             }
             else
             {
@@ -454,6 +702,8 @@ namespace DTAClient.DXGUI.Generic
                 panelGameStatistics.Enabled = true;
                 panelTotalStatistics.Visible = false;
                 panelTotalStatistics.Enabled = false;
+                panelAchStatistics.Visible = false;
+                panelAchStatistics.Enabled = false;
             }
         }
 
@@ -642,6 +892,8 @@ namespace DTAClient.DXGUI.Generic
             listedGameIndexes.Reverse();
 
             SetTotalStatistics();
+
+            SetAchStatistics();
 
             foreach (int gameIndex in listedGameIndexes)
             {
@@ -916,9 +1168,13 @@ namespace DTAClient.DXGUI.Generic
             if (gameLosses > 0)
             {
                 lblWinLossRatioValue.Text = Math.Round(wins / (double)gameLosses, 2).ToString();
+                Value[2, 0] = Math.Round(wins / (double)gameLosses, 2);
             }
             else
+            {
+                Value[2, 0] = 0;
                 lblWinLossRatioValue.Text = "-";
+            }
 
             if (gamesStarted > 0)
             {
@@ -951,6 +1207,9 @@ namespace DTAClient.DXGUI.Generic
             else
                 lblKillLossRatioValue.Text = "-";
 
+            Value[0, 0] = gamesStarted;
+            Value[1, 0] = totalKills;
+
             lblTotalTimePlayedValue.Text = timePlayed.ToString();
             lblTotalKillsValue.Text = totalKills.ToString();
             lblTotalLossesValue.Text = totalLosses.ToString();
@@ -963,6 +1222,87 @@ namespace DTAClient.DXGUI.Generic
                 lblAverageAILevelValue.Text = "Medium".L10N("Client:Main:MediumAI");
             else
                 lblAverageAILevelValue.Text = "Hard".L10N("Client:Main:HardAI");
+        }
+
+        private void SetAchStatistics()
+        {
+            TimeSpan timePlayed = TimeSpan.Zero;
+            Value[3, 0] = 0;
+            Value[4, 0] = 0;
+            Value[5, 0] = 0;
+            Value[6, 0] = 0;
+            Value[7, 0] = 0;
+            Value[8, 0] = 0;
+            Value[9, 0] = 0;
+            Value[10, 0] = 0;
+            Value[11, 0] = 0;
+            Value[12, 0] = 0;
+            Value[13, 0] = 0;
+            Value[14, 0] = 0;
+
+            foreach (int gameIndex in listedGameIndexes)
+            {
+                MatchStatistics ms = sm.GetMatchByIndex(gameIndex);
+                PlayerStatistics localPlayer = FindLocalPlayer(ms);
+                if (ms.GameMode == "海战")
+                {
+                    Value[6, 0]++;
+                }
+                if (string.Compare(TimeSpan.FromSeconds(ms.LengthInSeconds).ToString(), "00:45:00") > 0)
+                    Value[3, 0]++;
+                if (string.Compare(TimeSpan.FromSeconds(ms.LengthInSeconds).ToString(), "00:10:00") < 0)
+                    Value[4, 0]++;
+                if (!localPlayer.WasSpectator)
+                {
+                    if (localPlayer.Won)
+                    {
+                        if (localPlayer.Side == 4)
+                            Value[7, 0]++;
+                        if (ms.GetPlayerCount() == 2)
+                            Value[8, 0]++;
+                        if (ms.MapName == "(8) 冰天雪地" || ms.MapName == "[8]冰天雪地")
+                            Value[14, 0]++;
+                        if (localPlayer.Side == 3)
+                        {
+                            if ((ms.GetPlayer(0).Side == 3 && ms.GetPlayer(1).Side == 10) || (ms.GetPlayer(1).Side == 3 && ms.GetPlayer(0).Side == 10))
+                                Value[10, 0]++;
+                            if (localPlayer.Economy > 500)
+                                Value[13, 0]++;
+                        }
+                        int Max = 0, Min = 9999999;
+                        for (int c = 0; c < ms.GetPlayerCount(); c++)
+                        {
+                            if (ms.GetPlayer(c).Score > Max)
+                                Max = ms.GetPlayer(c).Score;
+                            if (ms.GetPlayer(c).Score < Min)
+                                Min = ms.GetPlayer(c).Score;
+                        }
+                        if (localPlayer.Score == Max && !localPlayer.Won)
+                            Value[11, 0]++;
+                        if (localPlayer.Score == Min && localPlayer.Won)
+                            Value[12, 0]++;
+                        if (localPlayer.Losses <= 10) 
+                        Value[5, 0]++;
+                        if (localPlayer.Losses + localPlayer.Kills > 1000)
+                            Value[9, 0]++;
+                    }
+                }
+            }
+            PrghardenedValue.Value = (int)Value[0, 0];
+            PrgkillValue.Value = (int)Value[1, 0];
+            PrgVictorValue.Value = (int)Value[2, 0];
+            PrgLongValue.Value = (int)Value[3, 0];
+            PrgShortValue.Value = (int)Value[4, 0];
+            PrgSoldierValue.Value = (int)Value[5, 0];
+            PrgNavalValue.Value = (int)Value[6, 0];
+            PrgGermanyValue.Value = (int)Value[7, 0];
+            PrgOneValue.Value = (int)Value[8, 0];
+            PrgBulletsValue.Value = (int)Value[9, 0];
+            PrgFkyValue.Value = (int)Value[10, 0];
+            PrgMaxValue.Value = (int)Value[11, 0];
+            PrgMinValue.Value = (int)Value[12, 0];
+            PrgMaginotValue.Value = (int)Value[13, 0];
+            PrgBtValue.Value = (int)Value[14, 0];
         }
 
         private PlayerStatistics FindLocalPlayer(MatchStatistics ms)
