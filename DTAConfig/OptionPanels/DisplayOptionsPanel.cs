@@ -252,7 +252,7 @@ namespace DTAConfig.OptionPanels
             chkBorderlessClient.Name = "chkBorderlessClient";
             chkBorderlessClient.ClientRectangle = new Rectangle(
                 lblClientResolution.X,
-                lblDetailLevel.Y, 0, 0);
+                chkCustomIngameResolution.Y, 0, 0);
             chkBorderlessClient.Text = "Fullscreen Client".L10N("Client:DTAConfig:FullscreenClient");
             chkBorderlessClient.CheckedChanged += ChkBorderlessMenu_CheckedChanged;
             chkBorderlessClient.Checked = true;

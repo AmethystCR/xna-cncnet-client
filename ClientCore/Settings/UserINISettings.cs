@@ -68,9 +68,9 @@ namespace ClientCore
             ClientFPS = new IntSetting(iniFile, VIDEO, "ClientFPS", 60);
             DisplayToggleableExtraTextures = new BoolSetting(iniFile, VIDEO, "DisplayToggleableExtraTextures", true);
 
-            ScoreVolume = new DoubleSetting(iniFile, AUDIO, "ScoreVolume", 0.7);
-            SoundVolume = new DoubleSetting(iniFile, AUDIO, "SoundVolume", 0.7);
-            VoiceVolume = new DoubleSetting(iniFile, AUDIO, "VoiceVolume", 0.7);
+            ScoreVolume = new DoubleSetting(iniFile, AUDIO, "ScoreVolume", 0.5);
+            SoundVolume = new DoubleSetting(iniFile, AUDIO, "SoundVolume", 0.8);
+            VoiceVolume = new DoubleSetting(iniFile, AUDIO, "VoiceVolume", 0.8);
             IsScoreShuffle = new BoolSetting(iniFile, AUDIO, "IsScoreShuffle", true);
             ClientVolume = new DoubleSetting(iniFile, AUDIO, "ClientVolume", 1.0);
             PlayMainMenuMusic = new BoolSetting(iniFile, AUDIO, "PlayMainMenuMusic", true);

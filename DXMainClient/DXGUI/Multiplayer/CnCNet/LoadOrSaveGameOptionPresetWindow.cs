@@ -133,7 +133,7 @@ namespace DTAClient.DXGUI.Multiplayer.CnCNet
         public override void Initialize()
         {
             PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
-            BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 255), 1, 1);
+            BackgroundTexture = AssetLoader.LoadTexture("loadorsavegameoptionsbg.png");
             
             base.Initialize();
         }
