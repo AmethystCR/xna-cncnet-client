@@ -124,6 +124,12 @@ namespace DTAClient.Domain.Multiplayer
         public string Author { get; private set; }
 
         /// <summary>
+        /// The theater of the map.
+        /// </summary>
+        [JsonInclude]
+        public string Theater { get; private set; }
+
+        /// <summary>
         /// The calculated SHA1 of the map.
         /// </summary>
         [JsonIgnore]
@@ -297,6 +303,7 @@ namespace DTAClient.Domain.Multiplayer
 
                 Author = section.GetStringValue("Author", "Unknown author");
                 GameModes = section.GetStringValue("GameModes", "Default").Split(',');
+                Theater = section.GetStringValue("Theater", "Unknown".L10N("INI:Maps:MapTheaterUnknown"));
 
                 MinPlayers = section.GetIntValue("MinPlayers", 0);
                 MaxPlayers = section.GetIntValue("MaxPlayers", 0);
@@ -607,6 +614,7 @@ namespace DTAClient.Domain.Multiplayer
 
                 localSize = iniFile.GetStringValue("Map", "LocalSize", "0,0,0,0").Split(',');
                 actualSize = iniFile.GetStringValue("Map", "Size", "0,0,0,0").Split(',');
+                Theater = iniFile.GetStringValue("Map", "Theater", "Unknown".L10N("INI:Maps:MapTheaterUnknown"));
 
                 if (MainClientConstants.USE_ISOMETRIC_CELLS)
                 {

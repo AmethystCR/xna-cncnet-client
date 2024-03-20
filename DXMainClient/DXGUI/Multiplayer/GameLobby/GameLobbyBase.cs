@@ -121,11 +121,14 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected XNALabel lblMapAuthor;
         protected XNALabel lblGameMode;
         protected XNALabel lblMapSize;
+        protected XNALabel lblMapTheater;
 
         protected XNALabel lblplayerNumbers;
         protected XNALabel lblAuthor;
+        protected XNALabel lblFilTheater;
         protected XNAClientDropDown ddplayerNumbers;
         protected XNAClientDropDown ddAuthor;
+        protected XNAClientDropDown ddFilTheater;
 
         protected MapPreviewBox MapPreviewBox;
 
@@ -230,6 +233,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             lblMapAuthor = FindChild<XNALabel>(nameof(lblMapAuthor));
             lblGameMode = FindChild<XNALabel>(nameof(lblGameMode));
             lblMapSize = FindChild<XNALabel>(nameof(lblMapSize));
+            lblMapTheater = FindChild<XNALabel>(nameof(lblMapTheater));
 
             lbGameModeMapList = FindChild<XNAMultiColumnListBox>("lbMapList"); // lbMapList for backwards compatibility
             lbGameModeMapList.SelectedIndexChanged += LbGameModeMapList_SelectedIndexChanged;
@@ -289,6 +293,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             lblplayerNumbers = FindChild<XNALabel>(nameof(lblplayerNumbers));
             lblAuthor = FindChild<XNALabel>(nameof(lblAuthor));
+            lblFilTheater = FindChild<XNALabel>(nameof(lblFilTheater));
             
             ddplayerNumbers = FindChild<XNAClientDropDown>(nameof(ddplayerNumbers));
             ddplayerNumbers.AddItem("-");
@@ -305,6 +310,19 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             ddplayerNumbers.Tag = true;
 
             ddAuthor = FindChild<XNAClientDropDown>(nameof(ddAuthor));
+
+            ddFilTheater = FindChild<XNAClientDropDown>(nameof(ddFilTheater));
+            ddFilTheater.AddItem("-");
+            ddFilTheater.AddItem("TEMPERATE");
+            ddFilTheater.AddItem("DESERT");
+            ddFilTheater.AddItem("SNOW");
+            ddFilTheater.AddItem("LUNAR");			
+            ddFilTheater.AddItem("URBAN");
+            ddFilTheater.AddItem("NEWURBAN");
+            ddFilTheater.AllowDropDown = true;
+            ddFilTheater.SelectedIndex = 0;
+            ddFilTheater.SelectedIndexChanged += MapScreenActived;
+            ddFilTheater.Tag = true;
 
             btnCreateRandomMap = FindChild<XNAClientButton>(nameof(btnCreateRandomMap));
             btnCreateRandomMap.LeftClick += BtnCreateRandomMap_LeftClick;
@@ -516,6 +534,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             tbMapSearch.Text = string.Empty;
             tbMapSearch.OnSelectedChanged();
             ddplayerNumbers.OnSelectedChanged();
+            ddFilTheater.OnSelectedChanged();
 
             ListMaps();
 
@@ -624,6 +643,14 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 if (!ddAuthor.SelectedItem.Text.Contains("-"))
                 {
                     if (!gameModeMap.Map.Author.Contains(ddAuthor.SelectedItem.Text))
+                    {
+                        skippedMapsCount++;
+                        continue;
+                    }
+                }
+                if (!ddFilTheater.SelectedItem.Text.Contains("-"))
+                {
+                    if (gameModeMap.Map.Theater != ddFilTheater.SelectedItem.Text)
                     {
                         skippedMapsCount++;
                         continue;
@@ -925,6 +952,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 if (!ddAuthor.SelectedItem.Text.Contains("-"))
                 {
                     if (!GameMode.Maps[i].Author.Contains(ddAuthor.SelectedItem.Text))
+                    {
+                        continue;
+                    }
+                }
+                if (!ddFilTheater.SelectedItem.Text.Contains("-"))
+                {
+                    if (GameMode.Maps[i].Theater != ddFilTheater.SelectedItem.Text)
                     {
                         continue;
                     }
@@ -2273,6 +2307,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 lblMapAuthor.Text = "By Unknown Author".L10N("Client:Main:AuthorByUnknown");
                 lblGameMode.Text = "Game mode: Unknown".L10N("Client:Main:GameModeUnknown");
                 lblMapSize.Text = "Size: Not available".L10N("Client:Main:MapSizeUnknown");
+                lblMapTheater.Text = "Theater: Unknown".L10N("Client:Main:MapTheaterUnknown");
 
                 MapPreviewBox.GameModeMap = null;
 
@@ -2283,6 +2318,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             lblMapAuthor.Text = "By".L10N("Client:Main:AuthorBy") + " " + Renderer.GetSafeString(Map.Author, lblMapAuthor.FontIndex);
             lblGameMode.Text = "Game mode:".L10N("Client:Main:GameModeLabel") + " " + GameMode.UIName;
             lblMapSize.Text = "Size:".L10N("Client:Main:MapSize") + " " + Map.GetSizeString();
+            lblMapTheater.Text = "Theater".L10N("Client:Main:Theater") + " " + Renderer.GetSafeString(Map.Theater, lblMapTheater.FontIndex).L10N($"Client:Main:Theater:{Map.Theater}");
 
             disableGameOptionUpdateBroadcast = true;
 
