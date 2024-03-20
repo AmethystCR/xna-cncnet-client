@@ -694,6 +694,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             tbMapSearch.Disable();
             btnPickRandomMap.Disable();
             btnMapSortAlphabetically.Disable();
+			
+            lblplayerNumbers.Disable();
+            lblAuthor.Disable();
+            ddAuthor.Disable();
+            ddplayerNumbers.Disable();
         }
 
         private void ShowMapList()
@@ -712,6 +717,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             tbMapSearch.Enable();
             btnPickRandomMap.Enable();
             btnMapSortAlphabetically.Enable();
+
+            lblplayerNumbers.Enable();
+            lblAuthor.Enable();
+            ddAuthor.Enable();
+            ddplayerNumbers.Enable();
 
             ReadINIForControl(btnPickRandomMap);
             ReadINIForControl(lbChatMessages);

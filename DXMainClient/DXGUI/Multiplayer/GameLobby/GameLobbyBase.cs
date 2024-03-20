@@ -121,6 +121,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected XNALabel lblGameMode;
         protected XNALabel lblMapSize;
 
+        protected XNALabel lblplayerNumbers;
+        protected XNALabel lblAuthor;
+        protected XNAClientDropDown ddplayerNumbers;
+        protected XNAClientDropDown ddAuthor;
+
         protected MapPreviewBox MapPreviewBox;
 
         protected XNAMultiColumnListBox lbGameModeMapList;
@@ -276,6 +281,43 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             btnPickRandomMap = FindChild<XNAClientButton>(nameof(btnPickRandomMap));
             btnPickRandomMap.LeftClick += BtnPickRandomMap_LeftClick;
 
+            lblplayerNumbers = FindChild<XNALabel>(nameof(lblplayerNumbers));
+            lblAuthor = FindChild<XNALabel>(nameof(lblAuthor));
+            
+            ddplayerNumbers = FindChild<XNAClientDropDown>(nameof(ddplayerNumbers));
+            ddplayerNumbers.AddItem("-");
+            ddplayerNumbers.AddItem("2");
+            ddplayerNumbers.AddItem("3");
+            ddplayerNumbers.AddItem("4");
+            ddplayerNumbers.AddItem("5");
+            ddplayerNumbers.AddItem("6");
+            ddplayerNumbers.AddItem("7");
+            ddplayerNumbers.AddItem("8");
+            ddplayerNumbers.AllowDropDown = true;
+            ddplayerNumbers.SelectedIndex = 0;
+            ddplayerNumbers.SelectedIndexChanged += MapScreenActived;
+            ddplayerNumbers.Tag = true;
+
+            ddAuthor = FindChild<XNAClientDropDown>(nameof(ddAuthor));
+
+            var mpMapsIni = new IniFile(ProgramConstants.GamePath + ClientConfiguration.Instance.MPMapsIniPath);
+            List<string> authorListIndex = mpMapsIni.GetSectionKeys("AuthorList");
+            List<string> authorList = new List<string>();
+            foreach (string index in authorListIndex)
+            {
+                authorList.Add(mpMapsIni.GetStringValue("AuthorList", index, ""));
+            }
+
+            ddAuthor.AddItem("-");
+            foreach (string author in authorList)
+            {
+                ddAuthor.AddItem(author);
+            }
+            ddAuthor.SelectedIndex = 0;
+            ddAuthor.AllowDropDown = true;
+            ddAuthor.SelectedIndexChanged += MapScreenActived;
+            ddAuthor.Tag = true;
+
             CheckBoxes.ForEach(chk => chk.CheckedChanged += ChkBox_CheckedChanged);
             DropDowns.ForEach(dd => dd.SelectedIndexChanged += Dropdown_SelectedIndexChanged);
 
@@ -414,6 +456,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private void TbMapSearch_InputReceived(object sender, EventArgs e) => ListMaps();
 
+        private void MapScreenActived(object sender, EventArgs e) => ListMaps();
+
         private void Dropdown_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (disableGameOptionUpdateBroadcast)
@@ -447,6 +491,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             tbMapSearch.Text = string.Empty;
             tbMapSearch.OnSelectedChanged();
+            ddplayerNumbers.OnSelectedChanged();
 
             ListMaps();
 
@@ -538,6 +583,23 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                         || gameModeMap.Map.UntranslatedName.ToUpperInvariant().Contains(promptUpper);
 
                     if (!mapMatches)
+                    {
+                        skippedMapsCount++;
+                        continue;
+                    }
+                }
+
+                if (!ddplayerNumbers.SelectedItem.Text.Contains("-"))
+                {
+                    if (gameModeMap.Map.MaxPlayers != int.Parse(ddplayerNumbers.SelectedItem.Text))
+                    {
+                        skippedMapsCount++;
+                        continue;
+                    }
+                }
+                if (!ddAuthor.SelectedItem.Text.Contains("-"))
+                {
+                    if (!gameModeMap.Map.Author.Contains(ddAuthor.SelectedItem.Text))
                     {
                         skippedMapsCount++;
                         continue;
@@ -715,15 +777,48 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             Logger.Log("PickRandomMap: Rolled " + random + " out of " + maps.Count + ". Picked map: " + Map.Name);
 
             ChangeMap(GameModeMap);
-            tbMapSearch.Text = string.Empty;
-            tbMapSearch.OnSelectedChanged();
+            //tbMapSearch.Text = string.Empty;
+            //tbMapSearch.OnSelectedChanged();
             ListMaps();
         }
 
         private List<Map> GetMapList(int playerCount)
         {
-            List<Map> mapList = (GameMode?.Maps.Where(x => x.MaxPlayers == playerCount) ?? Array.Empty<Map>()).ToList();
-            if (mapList.Count < 1 && playerCount <= MAX_PLAYER_COUNT)
+            List<Map> mapList = new List<Map>();
+            for (int i = 0; i < GameMode.Maps.Count; i++)
+            {
+                if (tbMapSearch.Text != tbMapSearch.Suggestion)
+                {
+                    if (!GameMode.Maps[i].Name.ToUpper().Contains(tbMapSearch.Text.ToUpper()))
+                    {
+                        continue;
+                    }
+                }
+
+                if (!ddplayerNumbers.SelectedItem.Text.Contains("-"))
+                {
+                    if (GameMode.Maps[i].MaxPlayers != int.Parse(ddplayerNumbers.SelectedItem.Text))
+                    {
+                        continue;
+                    }
+                }
+                else
+                {
+                    if (GameMode.Maps[i].MaxPlayers != playerCount)
+                    {
+                        continue;
+                    }
+                }
+                if (!ddAuthor.SelectedItem.Text.Contains("-"))
+                {
+                    if (!GameMode.Maps[i].Author.Contains(ddAuthor.SelectedItem.Text))
+                    {
+                        continue;
+                    }
+                }
+                mapList.Add(GameMode.Maps[i]);
+            }
+            if (mapList.Count < 1 && playerCount <= MAX_PLAYER_COUNT && ddplayerNumbers.SelectedItem.Text.Contains("-"))
                 return GetMapList(playerCount + 1);
             else
                 return mapList;
