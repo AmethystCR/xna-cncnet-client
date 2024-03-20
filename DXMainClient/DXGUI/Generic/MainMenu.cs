@@ -77,6 +77,8 @@ namespace DTAClient.DXGUI.Generic
         private XNALinkLabel lblUpdateStatus;
         private XNALinkLabel lblVersion;
 
+        private XNADynamicLabel lblHintText;
+
         private CnCNetLobby cncnetLobby;
 
         private SkirmishLobby skirmishLobby;
@@ -247,6 +249,10 @@ namespace DTAClient.DXGUI.Generic
             lblUpdateStatus.LeftClick += LblUpdateStatus_LeftClick;
             lblUpdateStatus.ClientRectangle = new Rectangle(0, 0, UIDesignConstants.BUTTON_WIDTH_160, 20);
 
+            lblHintText = new XNADynamicLabel(WindowManager);
+            lblHintText.Name = "lblHintText";
+            lblHintText.ClientRectangle = new Rectangle(0, 0, 1000, 25);
+
             AddChild(btnNewCampaign);
             AddChild(btnLoadGame);
             AddChild(btnSkirmish);
@@ -260,6 +266,7 @@ namespace DTAClient.DXGUI.Generic
             AddChild(btnExit);
             AddChild(lblCnCNetStatus);
             AddChild(lblCnCNetPlayerCount);
+            AddChild(lblHintText);
 
             if (!ClientConfiguration.Instance.ModMode)
             {
