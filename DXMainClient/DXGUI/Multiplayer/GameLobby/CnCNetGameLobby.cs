@@ -54,6 +54,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             this.connectionManager = connectionManager;
             localGame = ClientConfiguration.Instance.LocalGame;
+            LoadMapGame = ClientConfiguration.Instance.LoadMapGame;
             this.tunnelHandler = tunnelHandler;
             this.gameCollection = gameCollection;
             this.cncnetUserData = cncnetUserData;
@@ -113,6 +114,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private Channel channel;
         private CnCNetManager connectionManager;
         private string localGame;
+        private string LoadMapGame;
 
         private GameCollection gameCollection;
         private CnCNetUserData cncnetUserData;
@@ -1206,7 +1208,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             Logger.Log("Map sharing confirmed.");
             AddNotice("Attempting to download map.".L10N("Client:Main:DownloadingMap"));
             mapSharingConfirmationPanel.SetDownloadingStatus();
-            MapSharer.DownloadMap(lastMapSHA1, localGame, lastMapName);
+            MapSharer.DownloadMap(lastMapSHA1, ClientConfiguration.Instance.LoadMapGame, lastMapName);
         }
 
         protected override void ChangeMap(GameModeMap gameModeMap)
@@ -1631,7 +1633,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             string mapFileName = MapSharer.GetMapFileName(e.SHA1, e.MapName);
             Logger.Log("Map " + mapFileName + " downloaded, parsing.");
-            string mapPath = "Maps/Custom/" + mapFileName;
+            string mapPath = $"Maps\\{ClientConfiguration.Instance.CustomMapFolderName}\\" + mapFileName;
             Map map = MapLoader.LoadCustomMap(mapPath, out string returnMessage);
             if (map != null)
             {
@@ -1737,7 +1739,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 "Attempting to upload the map to the CnCNet map database.").L10N("Client:Main:UpdateMapToDBPrompt"),
                 sender, map.Name));
 
-            MapSharer.UploadMap(map, localGame);
+            MapSharer.UploadMap(map, ClientConfiguration.Instance.LoadMapGame);
         }
 
         /// <summary>
@@ -1784,7 +1786,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             if (lastMapSHA1 == sha1 && Map == null)
             {
                 Logger.Log("The game host has uploaded the map into the database. Re-attempting download...");
-                MapSharer.DownloadMap(sha1, localGame, lastMapName);
+                MapSharer.DownloadMap(sha1, ClientConfiguration.Instance.LoadMapGame, lastMapName);
             }
         }
 
@@ -1865,7 +1867,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             Logger.Log(message);
             AddNotice(message);
 
-            MapSharer.DownloadMap(sha1, localGame, safeMapName);
+            MapSharer.DownloadMap(sha1, ClientConfiguration.Instance.LoadMapGame, safeMapName);
         }
 
         #endregion

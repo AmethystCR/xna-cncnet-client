@@ -4,6 +4,7 @@ using Rampastring.Tools;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 using ClientCore.I18N;
 using ClientCore.Extensions;
 
@@ -183,6 +184,8 @@ namespace ClientCore
 
         public string LocalGame => clientDefinitionsIni.GetStringValue(SETTINGS, "LocalGame", "DTA");
 
+        public string LoadMapGame => clientDefinitionsIni.GetStringValue(SETTINGS, "LoadMapGame", "YR");
+
         public bool SidebarHack => clientDefinitionsIni.GetBooleanValue(SETTINGS, "SidebarHack", false);
 
         public int MinimumRenderWidth => clientDefinitionsIni.GetIntValue(SETTINGS, "MinimumRenderWidth", 1280);
@@ -327,6 +330,8 @@ namespace ClientCore
         public bool CopyMissionsToSpawnmapINI => clientDefinitionsIni.GetBooleanValue(SETTINGS, "CopyMissionsToSpawnmapINI", true);
 
         public string AllowedCustomGameModes => clientDefinitionsIni.GetStringValue(SETTINGS, "AllowedCustomGameModes", "Standard,Custom Map");
+
+        public string CustomMapFolderName => clientDefinitionsIni.GetStringValue(SETTINGS, "CustomMapFolderName", "Custom");
 
         public string GetGameExecutableName()
         {

@@ -17,6 +17,7 @@ using DTAClient.DXGUI.Multiplayer.CnCNet;
 using DTAClient.Online.EventArguments;
 using ClientCore.Extensions;
 using TextCopy;
+using System.Diagnostics;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
@@ -142,6 +143,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected List<PlayerInfo> Players = new List<PlayerInfo>();
         protected List<PlayerInfo> AIPlayers = new List<PlayerInfo>();
 
+        protected XNAClientButton btnCreateRandomMap;
+        protected RandomMapWindow randomMapWindow;
+
         protected virtual PlayerInfo FindLocalPlayer() => Players.Find(p => p.Name == ProgramConstants.PLAYERNAME);
 
         protected bool PlayerUpdatingInProgress { get; set; }
@@ -161,6 +165,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected int RandomSelectorCount { get; private set; } = 1;
 
         protected List<int[]> RandomSelectors = new List<int[]>();
+
+        protected string RandomMapName;
 
         private readonly bool isMultiplayer = false;
 
@@ -299,6 +305,17 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             ddplayerNumbers.Tag = true;
 
             ddAuthor = FindChild<XNAClientDropDown>(nameof(ddAuthor));
+
+            btnCreateRandomMap = FindChild<XNAClientButton>(nameof(btnCreateRandomMap));
+            btnCreateRandomMap.LeftClick += BtnCreateRandomMap_LeftClick;
+
+            randomMapWindow = new RandomMapWindow(WindowManager);
+            randomMapWindow.Initialize();
+            randomMapWindow.DrawOrder = 1;
+            randomMapWindow.UpdateOrder = 1;
+            DarkeningPanel.AddAndInitializeWithControl(WindowManager, randomMapWindow);
+            randomMapWindow.CenterOnParent();
+            randomMapWindow.Disable();
 
             var mpMapsIni = new IniFile(ProgramConstants.GamePath + ClientConfiguration.Instance.MPMapsIniPath);
             List<string> authorListIndex = mpMapsIni.GetSectionKeys("AuthorList");
@@ -453,6 +470,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         protected abstract void AddNotice(string message, Color color);
 
         private void BtnPickRandomMap_LeftClick(object sender, EventArgs e) => PickRandomMap();
+
+        private void BtnCreateRandomMap_LeftClick(object sender, EventArgs e) => ShowRandomMapWindow();
+
+        private void ShowRandomMapWindow()
+        {
+            randomMapWindow.Open();
+        }
 
         private void TbMapSearch_InputReceived(object sender, EventArgs e) => ListMaps();
 
@@ -780,6 +804,95 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             //tbMapSearch.Text = string.Empty;
             //tbMapSearch.OnSelectedChanged();
             ListMaps();
+        }
+
+        public virtual void BtnGenerateMap_LeftClick(object sender, EventArgs e)
+        {
+            var random = new Random();
+            RandomMapName = "Random Map 01".L10N("Client:Main:RandomMap01");
+            int i = 1;
+            while (File.Exists($"Maps\\{ClientConfiguration.Instance.CustomMapFolderName}\\{RandomMapName}.map"))
+            {
+                RandomMapName = "Random Map".L10N("Client:Main:RandomMap") + string.Format(" {0:D2}", i);
+                i++;
+            }
+
+            int width = 0;
+            int height = 0;
+            int totalPlayer = 0;
+            foreach (var player in randomMapWindow.ddPlayers)
+            {
+                totalPlayer += player.SelectedIndex;
+            }
+
+            string mapType = (string)randomMapWindow.ddMapMode.SelectedItem.Tag;
+
+            var settings1 = new IniFile(RandomMapWindow.GeneratorPath + "settings.ini");
+            var workFolder = settings1.GetStringValue("settings", "WorkingFolder", "MapUnits");
+            workFolder = workFolder.EndsWith("\\") ? workFolder : workFolder + "\\";
+            var mapModeFolder = RandomMapWindow.GeneratorPath + workFolder + mapType + "\\";
+
+            var settings = new IniFile(mapModeFolder + "settings.ini"); 
+            int GiganticMapSideLengthMin = int.Parse(settings.GetStringValue("settings", "GiganticMapSideLength", "95,110").Split(',')[0]);
+            int GiganticMapSideLengthMax = int.Parse(settings.GetStringValue("settings", "GiganticMapSideLength", "95,110").Split(',')[1]);
+            int BigMapSideLengthMin = int.Parse(settings.GetStringValue("settings", "BigMapSideLength", "80,100").Split(',')[0]);
+            int BigMapSideLengthMax = int.Parse(settings.GetStringValue("settings", "BigMapSideLength", "80,100").Split(',')[1]);
+            int MediumMapSideLengthMin = int.Parse(settings.GetStringValue("settings", "MediumMapSideLength", "65,80").Split(',')[0]);
+            int MediumMapSideLengthMax = int.Parse(settings.GetStringValue("settings", "MediumMapSideLength", "65,80").Split(',')[1]);
+            int SmallMapSideLengthMin = int.Parse(settings.GetStringValue("settings", "SmallMapSideLength", "50,65").Split(',')[0]);
+            int SmallMapSideLengthMax = int.Parse(settings.GetStringValue("settings", "SmallMapSideLength", "50,65").Split(',')[1]);
+            int playerAddition = settings.GetIntValue("settings", totalPlayer.ToString()+"PlayerAddition", 0);
+            string gamemode = GameMode.Name.ToLower();
+            string gamemodeLine = "";
+            if (gamemode == "standard")
+                gamemodeLine = "standard";
+            else
+                gamemodeLine = "standard," + gamemode;
+
+            if (randomMapWindow.ddMapSize.SelectedIndex == 0)
+            {
+                width = random.Next(GiganticMapSideLengthMin + playerAddition, GiganticMapSideLengthMax + playerAddition);
+                height = random.Next(GiganticMapSideLengthMin + playerAddition, GiganticMapSideLengthMax + playerAddition);
+            }
+            else if (randomMapWindow.ddMapSize.SelectedIndex == 1)
+            {
+                width = random.Next(BigMapSideLengthMin + playerAddition, BigMapSideLengthMax + playerAddition);
+                height = random.Next(BigMapSideLengthMin + playerAddition, BigMapSideLengthMax + playerAddition);
+            }
+            else if (randomMapWindow.ddMapSize.SelectedIndex == 2)
+            {
+                width = random.Next(MediumMapSideLengthMin + playerAddition, MediumMapSideLengthMax + playerAddition);
+                height = random.Next(MediumMapSideLengthMin + playerAddition, MediumMapSideLengthMax + playerAddition);
+            }
+            else if (randomMapWindow.ddMapSize.SelectedIndex == 3)
+            {
+                width = random.Next(SmallMapSideLengthMin + playerAddition, SmallMapSideLengthMax + playerAddition);
+                height = random.Next(SmallMapSideLengthMin + playerAddition, SmallMapSideLengthMax + playerAddition);
+            }
+            string size = $"-w {width} -h {height}";
+            string playerLocation = $" --nwp {randomMapWindow.ddPlayerNW.SelectedIndex} --np {randomMapWindow.ddPlayerN.SelectedIndex} --nep {randomMapWindow.ddPlayerNE.SelectedIndex} --ep {randomMapWindow.ddPlayerE.SelectedIndex} --sep {randomMapWindow.ddPlayerSE.SelectedIndex} --sp {randomMapWindow.ddPlayerS.SelectedIndex} --swp {randomMapWindow.ddPlayerSW.SelectedIndex} --wp {randomMapWindow.ddPlayerW.SelectedIndex}";
+            string damaged = "";
+            if (randomMapWindow.chkDamagedBuilding.Checked)
+                damaged = " -d -s 0.02";
+            string thumbnail = "";
+            //if (!randomMapWindow.chkNoThumbnail.Checked)
+            //    thumbnail = " --no-thumbnail-output";
+            //else
+            thumbnail = " --no-thumbnail";
+
+            string renderfm = "";
+            if (randomMapWindow.chkRenderFullMap.Checked)
+                renderfm = " --renderfullmap";
+
+            Process RandomMapGenerator = new Process();
+            RandomMapGenerator.StartInfo.FileName = RandomMapWindow.GeneratorPath + "RandomMapGenerator.exe";
+            RandomMapGenerator.StartInfo.WorkingDirectory = RandomMapWindow.GeneratorPath;
+            RandomMapGenerator.StartInfo.UseShellExecute = false;
+            RandomMapGenerator.StartInfo.CreateNoWindow = true;
+            RandomMapGenerator.StartInfo.Arguments = $" {size} {playerLocation} {damaged} -n \"{RandomMapName}\" {thumbnail} -g {gamemodeLine} --type {mapType} {renderfm}";
+            RandomMapGenerator.Start();
+            while (!RandomMapGenerator.HasExited) { }
+            randomMapWindow.Disable();
         }
 
         private List<Map> GetMapList(int playerCount)

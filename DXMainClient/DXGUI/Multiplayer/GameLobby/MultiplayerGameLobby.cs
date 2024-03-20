@@ -15,6 +15,7 @@ using System.Text;
 using DTAClient.Domain;
 using Microsoft.Xna.Framework.Graphics;
 using ClientCore.Extensions;
+using System.Diagnostics;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
@@ -170,6 +171,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             MapPreviewBox.LocalStartingLocationSelected += MapPreviewBox_LocalStartingLocationSelected;
             MapPreviewBox.StartingLocationApplied += MapPreviewBox_StartingLocationApplied;
 
+            randomMapWindow.btnGenerateMap.LeftClick += BtnGenerateMap_LeftClick;
+
             sndJoinSound = new EnhancedSoundEffect("joingame.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyJoinCooldown);
             sndLeaveSound = new EnhancedSoundEffect("leavegame.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundGameLobbyLeaveCooldown);
             sndMessageSound = new EnhancedSoundEffect("message.wav", 0.0, 0.0, ClientConfiguration.Instance.SoundMessageCooldown);
@@ -216,6 +219,17 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             ReadINIForControl(tbChatInput);
             tbChatInput.Name = temp;
             ReadINIForControl(tbChatInput);
+        }
+
+        public override void BtnGenerateMap_LeftClick(object sender, EventArgs e)
+        {
+            AddNotice("Random Map Generating...".L10N("Client:Main:RandomMapGenerating"));
+            Logger.Log($"Random Map Generating...");
+            base.BtnGenerateMap_LeftClick(sender, e);
+
+            AddNotice(string.Format("Random Map {0}.map Generate Completed !".L10N("Client:Main:RandomMapGenerateCompleted"), RandomMapName));
+            Logger.Log($"Random Map {RandomMapName}.map Generate Completed !");
+            LoadCustomMap(RandomMapName);
         }
 
         /// <summary>
@@ -528,7 +542,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         /// <param name="mapName">Name of the map given as a parameter, without file extension.</param>
         private void LoadCustomMap(string mapName)
         {
-            Map map = MapLoader.LoadCustomMap($"Maps/Custom/{mapName}", out string resultMessage);
+            Map map = MapLoader.LoadCustomMap($"Maps\\{ClientConfiguration.Instance.CustomMapFolderName}\\{mapName}", out string resultMessage);
             if (map != null)
             {
                 AddNotice(resultMessage);
@@ -699,6 +713,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             lblAuthor.Disable();
             ddAuthor.Disable();
             ddplayerNumbers.Disable();
+            btnCreateRandomMap.Disable();
         }
 
         private void ShowMapList()
@@ -722,6 +737,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             lblAuthor.Enable();
             ddAuthor.Enable();
             ddplayerNumbers.Enable();
+            btnCreateRandomMap.Enable();
 
             ReadINIForControl(btnPickRandomMap);
             ReadINIForControl(lbChatMessages);

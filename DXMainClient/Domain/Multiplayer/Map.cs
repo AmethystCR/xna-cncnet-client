@@ -55,11 +55,16 @@ namespace DTAClient.Domain.Multiplayer
             Official = string.IsNullOrWhiteSpace(customMapFilePath);
         }
 
+        public void AddPrefix()
+        {
+            Name = "[Custom]".L10N("INI:Maps:CustomMapPrefix") + " " + Name;
+        }
+
         /// <summary>
         /// The name of the map.
         /// </summary>
         [JsonInclude]
-        public string Name { get; private set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// The original untranslated name of the map.
@@ -287,6 +292,8 @@ namespace DTAClient.Domain.Multiplayer
                 UntranslatedName = section.GetStringValue("Description", "Unnamed map");
                 Name = UntranslatedName
                     .L10N($"INI:Maps:{BaseFilePath}:Description");
+
+                if (!Official) AddPrefix();
 
                 Author = section.GetStringValue("Author", "Unknown author");
                 GameModes = section.GetStringValue("GameModes", "Default").Split(',');
@@ -529,6 +536,9 @@ namespace DTAClient.Domain.Multiplayer
                 IniSection basicSection = iniFile.GetSection("Basic");
 
                 UntranslatedName = Name = basicSection.GetStringValue("Name", "Unnamed map");
+
+                if (!Official) AddPrefix();
+
                 Author = basicSection.GetStringValue("Author", "Unknown author");
 
                 string gameModesString = basicSection.GetStringValue("GameModes", string.Empty);

@@ -12,6 +12,7 @@ using System.IO;
 using DTAClient.Domain;
 using Microsoft.Xna.Framework;
 using ClientCore.Extensions;
+using System.Diagnostics;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
@@ -40,6 +41,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             btnLeaveGame.Text = "Main Menu".L10N("Client:Main:MainMenu");
 
+            randomMapWindow.btnGenerateMap.LeftClick += BtnGenerateMap_LeftClick;
+
             //MapPreviewBox.EnableContextMenu = true;
 
             const string spectatorName = "Spectator";
@@ -60,6 +63,23 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             ddPlayerSides[0].SelectedIndexChanged += PlayerSideChanged;
 
             PlayerExtraOptionsPanel?.SetIsHost(true);
+        }
+
+        public override void BtnGenerateMap_LeftClick(object sender, EventArgs e)
+        {
+            Logger.Log($"Random Map Generating...");
+            base.BtnGenerateMap_LeftClick(sender, e);
+            Logger.Log($"Random Map {RandomMapName}.map Generate Completed !");
+            LoadCustomMap(RandomMapName);
+        }
+
+        private void LoadCustomMap(string mapName)
+        {
+            Map map = MapLoader.LoadCustomMap($"Maps\\{ClientConfiguration.Instance.CustomMapFolderName}\\{mapName}", out string resultMessage);
+
+            if (map == null)
+                return;
+            ListMaps();
         }
 
         protected override void ToggleFavoriteMap()
