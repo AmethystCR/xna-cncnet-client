@@ -1088,7 +1088,7 @@ namespace DTAClient.DXGUI.Generic
                 MusicOff();
         }
 
-        private void BtnMapEditor_LeftClick(object sender, EventArgs e) => LaunchMapEditor();
+        private void BtnMapEditor_LeftClick(object sender, EventArgs e) => LaunchMapEditorFA2sp();
 
         private void BtnStatistics_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.StatisticsWindow);
@@ -1303,6 +1303,27 @@ namespace DTAClient.DXGUI.Generic
             mapEditorProcess.StartInfo.UseShellExecute = false;
 
             mapEditorProcess.Start();
+        }
+
+        private void LaunchMapEditorFA2sp()
+        {
+            OSVersion osVersion = ClientConfiguration.Instance.GetOperatingSystemVersion();
+            using var mapEditorProcess = new Process();
+
+            if (osVersion != OSVersion.UNIX)
+            {
+                string strCmdText = string.Format("/c cd /d {0} && FinalAlert2SP.exe", ProgramConstants.GamePath + ClientConfiguration.Instance.MapEditorExePath);
+                mapEditorProcess.StartInfo.FileName = "cmd.exe";
+                mapEditorProcess.StartInfo.Arguments = strCmdText;
+                mapEditorProcess.StartInfo.UseShellExecute = false;
+                mapEditorProcess.StartInfo.CreateNoWindow = true;
+            }
+            else
+                mapEditorProcess.StartInfo.FileName = SafePath.CombineFilePath(ProgramConstants.GamePath, ClientConfiguration.Instance.UnixMapEditorExePath);
+
+            mapEditorProcess.Start();
+            mapEditorProcess.WaitForExit();
+            mapEditorProcess.Close();
         }
 
         public string GetSwitchName() => "Main Menu".L10N("Client:Main:MainMenu");

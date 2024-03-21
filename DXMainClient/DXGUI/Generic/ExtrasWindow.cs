@@ -33,7 +33,7 @@ namespace DTAClient.DXGUI.Generic
             btnExMapEditor.Name = "btnExMapEditor";
             btnExMapEditor.ClientRectangle = new Rectangle(76, 59, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
             btnExMapEditor.Text = "Map Editor".L10N("Client:Main:MapEditor");
-            btnExMapEditor.LeftClick += BtnExMapEditor_LeftClick;
+            btnExMapEditor.LeftClick += BtnExMapEditorFA2sp_LeftClick;
 
             var btnExCredits = new XNAClientButton(WindowManager);
             btnExCredits.Name = "btnExCredits";
@@ -76,6 +76,29 @@ namespace DTAClient.DXGUI.Generic
             mapEditorProcess.StartInfo.UseShellExecute = false;
 
             mapEditorProcess.Start();
+
+            Enabled = false;
+        }
+
+        private void BtnExMapEditorFA2sp_LeftClick(object sender, EventArgs e)
+        {
+            OSVersion osVersion = ClientConfiguration.Instance.GetOperatingSystemVersion();
+            using var mapEditorProcess = new Process();
+
+            if (osVersion != OSVersion.UNIX)
+            {
+                string strCmdText = string.Format("/c cd /d {0} && FinalAlert2SP.exe", ProgramConstants.GamePath + ClientConfiguration.Instance.MapEditorExePath);
+                mapEditorProcess.StartInfo.FileName = "cmd.exe";
+                mapEditorProcess.StartInfo.Arguments = strCmdText;
+                mapEditorProcess.StartInfo.UseShellExecute = false;
+                mapEditorProcess.StartInfo.CreateNoWindow = true;
+            }
+            else
+                mapEditorProcess.StartInfo.FileName = SafePath.CombineFilePath(ProgramConstants.GamePath, ClientConfiguration.Instance.UnixMapEditorExePath);
+
+            mapEditorProcess.Start();
+            mapEditorProcess.WaitForExit();
+            mapEditorProcess.Close();
 
             Enabled = false;
         }
