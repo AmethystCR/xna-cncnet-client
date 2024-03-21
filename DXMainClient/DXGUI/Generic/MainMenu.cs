@@ -76,6 +76,8 @@ namespace DTAClient.DXGUI.Generic
         private XNALabel lblCnCNetPlayerCount;
         private XNALinkLabel lblUpdateStatus;
         private XNALinkLabel lblVersion;
+        private XNALinkLabel lblLanguage;
+        private XNALinkLabel lblAssist;
 
         private XNADynamicLabel lblHintText;
 
@@ -139,6 +141,9 @@ namespace DTAClient.DXGUI.Generic
         private XNAClientButton btnStatistics;
         private XNAClientButton btnCredits;
         private XNAClientButton btnExtras;
+        private XNAClientButton btnExit;
+        private XNAClientButton btnAssistA;
+        private XNAClientButton btnAssistB;
 
         /// <summary>
         /// Initializes the main menu's controls.
@@ -224,12 +229,32 @@ namespace DTAClient.DXGUI.Generic
             btnExtras.HoverSoundEffect = new EnhancedSoundEffect("MainMenu/button.wav");
             btnExtras.LeftClick += BtnExtras_LeftClick;
 
-            var btnExit = new XNAClientButton(WindowManager);
+            btnExit = new XNAClientButton(WindowManager);
             btnExit.Name = nameof(btnExit);
             btnExit.IdleTexture = AssetLoader.LoadTexture("MainMenu/exitgame.png");
             btnExit.HoverTexture = AssetLoader.LoadTexture("MainMenu/exitgame_c.png");
             btnExit.HoverSoundEffect = new EnhancedSoundEffect("MainMenu/button.wav");
             btnExit.LeftClick += BtnExit_LeftClick;
+
+            btnAssistA = new XNAClientButton(WindowManager);
+            btnAssistA.Name = nameof(btnAssistA);
+            btnAssistA.IdleTexture = AssetLoader.LoadTexture("MainMenu/assist_a.png");
+            btnAssistA.HoverTexture = AssetLoader.LoadTexture("MainMenu/assist_a.png");
+            btnAssistA.HoverSoundEffect = new EnhancedSoundEffect("MainMenu/button.wav");
+            btnAssistA.DrawOrder = -10;
+            btnAssistA.UpdateOrder = -10;
+            btnAssistA.AllowClick = false;
+
+            btnAssistB = new XNAClientButton(WindowManager);
+            btnAssistB.Name = nameof(btnAssistB);
+            btnAssistB.IdleTexture = AssetLoader.LoadTexture("MainMenu/assist_b.png");
+            btnAssistB.HoverTexture = AssetLoader.LoadTexture("MainMenu/assist_b.png");
+            btnAssistB.HoverSoundEffect = new EnhancedSoundEffect("MainMenu/button.wav");
+            btnAssistB.DrawOrder = -10;
+            btnAssistB.UpdateOrder = -10;
+            btnAssistB.Disable();
+            btnAssistB.Visible = false;
+            btnAssistB.AllowClick = false;
 
             XNALabel lblCnCNetStatus = new XNALabel(WindowManager);
             lblCnCNetStatus.Name = nameof(lblCnCNetStatus);
@@ -253,6 +278,18 @@ namespace DTAClient.DXGUI.Generic
             lblHintText.Name = "lblHintText";
             lblHintText.ClientRectangle = new Rectangle(0, 0, 1000, 25);
 
+            lblLanguage = new XNALinkLabel(WindowManager);
+            lblLanguage.Name = nameof(lblLanguage);
+            lblLanguage.LeftClick += lblLanguage_LeftClick;
+            lblLanguage.Text = "Menu Language: < English >".L10N("Client:Main:English");
+            lblLanguage.Tag = 0;
+
+            lblAssist = new XNALinkLabel(WindowManager);
+            lblAssist.Name = nameof(lblAssist);
+            lblAssist.LeftClick += lblAssist_LeftClick;
+            lblAssist.Text = "Menu Assist: < Assist A >".L10N("Client:Main:AssistA");
+            lblAssist.Tag = 0;
+
             AddChild(btnNewCampaign);
             AddChild(btnLoadGame);
             AddChild(btnSkirmish);
@@ -264,9 +301,13 @@ namespace DTAClient.DXGUI.Generic
             AddChild(btnCredits);
             AddChild(btnExtras);
             AddChild(btnExit);
+            AddChild(btnAssistA);
+            AddChild(btnAssistB);
             AddChild(lblCnCNetStatus);
             AddChild(lblCnCNetPlayerCount);
             AddChild(lblHintText);
+            AddChild(lblLanguage);
+            AddChild(lblAssist);
 
             if (!ClientConfiguration.Instance.ModMode)
             {
@@ -324,9 +365,192 @@ namespace DTAClient.DXGUI.Generic
 
             UserINISettings.Instance.SettingsSaved += SettingsSaved;
 
+            if (UserINISettings.Instance.ClientTheme == "2-D")
+            {
+                if (!UserINISettings.Instance.MenuIsAssistA)
+                    ChangeToAssistB();
+            }
+            else
+            {
+                btnAssistA.Disable();
+                btnAssistA.Visible = false;
+                lblAssist.Disable();
+                lblAssist.Visible = false;
+            }
+            if (UserINISettings.Instance.ClientTheme == "2-D" || UserINISettings.Instance.ClientTheme == "GaxlayB" )
+            {
+                if (!UserINISettings.Instance.MenuTextIsEnglish)
+                    ChangeToChineseBtn();
+            }
+            else
+            {
+                lblLanguage.Disable();
+                lblLanguage.Visible = false;
+            }
+
             Updater.Restart += Updater_Restart;
 
             SetButtonHotkeys(true);
+        }
+
+        private void ChangeToAssistB()
+        {       
+            btnAssistA.Disable();
+            btnAssistA.Visible = false;
+            btnAssistB.Enable();
+            btnAssistB.Visible = true;
+            btnAssistB.DrawOrder = -10;
+            btnAssistB.UpdateOrder = -10;
+            BackgroundTexture = AssetLoader.LoadTexture("MainMenu/mainmenubg_B.png");
+            
+            lblAssist.Text = "Menu Assist: < Assist B >".L10N("Client:Main:AssistB");
+        }
+
+        private void ChangeToAssistA()
+        {
+            btnAssistB.Disable();
+            btnAssistB.Visible = false;
+            btnAssistA.Enable();
+            btnAssistA.Visible = true;
+            btnAssistA.DrawOrder = -10;
+            btnAssistA.UpdateOrder = -10;
+            BackgroundTexture = AssetLoader.LoadTexture("MainMenu/mainmenubg.png");
+            
+            lblAssist.Text = "Menu Assist: < Assist A >".L10N("Client:Main:AssistA");
+        }
+
+        private void lblAssist_LeftClick(object sender, EventArgs e)
+        {
+            if (UserINISettings.Instance.MenuIsAssistA) // A -> B
+            {
+                ChangeToAssistB();
+                UserINISettings.Instance.ReloadSettings();
+                UserINISettings.Instance.MenuIsAssistA.Value = false;
+                UserINISettings.Instance.SaveSettings();
+            }
+            else // B -> A
+            {
+                ChangeToAssistA();
+                UserINISettings.Instance.ReloadSettings();
+                UserINISettings.Instance.MenuIsAssistA.Value = true;
+                UserINISettings.Instance.SaveSettings();
+            }
+        }
+
+        private void ChangeToChineseBtn()
+        {
+            btnNewCampaign.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/campaign.png");
+            btnNewCampaign.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/campaign_c.png");
+            btnNewCampaign.ClientRectangle = new Rectangle(btnNewCampaign.LocationCN.X, btnNewCampaign.LocationCN.Y, btnNewCampaign.SizeCN.X, btnNewCampaign.SizeCN.Y);
+            
+            btnLoadGame.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/loadmission.png");
+            btnLoadGame.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/loadmission_c.png");
+            btnLoadGame.ClientRectangle = new Rectangle(btnLoadGame.LocationCN.X, btnLoadGame.LocationCN.Y, btnLoadGame.SizeCN.X, btnLoadGame.SizeCN.Y);
+            
+            btnSkirmish.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/skirmish.png");
+            btnSkirmish.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/skirmish_c.png");
+            btnSkirmish.ClientRectangle = new Rectangle(btnSkirmish.LocationCN.X, btnSkirmish.LocationCN.Y, btnSkirmish.SizeCN.X, btnSkirmish.SizeCN.Y);
+            
+            btnCnCNet.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/cncnet.png");
+            btnCnCNet.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/cncnet_c.png");
+            btnCnCNet.ClientRectangle = new Rectangle(btnCnCNet.LocationCN.X, btnCnCNet.LocationCN.Y, btnCnCNet.SizeCN.X, btnCnCNet.SizeCN.Y);
+            
+            btnLan.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/lan.png");
+            btnLan.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/lan_c.png");
+            btnLan.ClientRectangle = new Rectangle(btnLan.LocationCN.X, btnLan.LocationCN.Y, btnLan.SizeCN.X, btnLan.SizeCN.Y);
+            
+            btnOptions.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/options.png");
+            btnOptions.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/options_c.png");
+            btnOptions.ClientRectangle = new Rectangle(btnOptions.LocationCN.X, btnOptions.LocationCN.Y, btnOptions.SizeCN.X, btnOptions.SizeCN.Y);
+            
+            btnMapEditor.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/mapeditor.png");
+            btnMapEditor.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/mapeditor_c.png");
+            btnMapEditor.ClientRectangle = new Rectangle(btnMapEditor.LocationCN.X, btnMapEditor.LocationCN.Y, btnMapEditor.SizeCN.X, btnMapEditor.SizeCN.Y);
+            
+            btnStatistics.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/statistics.png");
+            btnStatistics.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/statistics_c.png");
+            btnStatistics.ClientRectangle = new Rectangle(btnStatistics.LocationCN.X, btnStatistics.LocationCN.Y, btnStatistics.SizeCN.X, btnStatistics.SizeCN.Y);
+            
+            btnCredits.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/credits.png");
+            btnCredits.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/credits_c.png");
+            btnCredits.ClientRectangle = new Rectangle(btnCredits.LocationCN.X, btnCredits.LocationCN.Y, btnCredits.SizeCN.X, btnCredits.SizeCN.Y);
+            
+            btnExtras.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/extras.png");
+            btnExtras.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/extras_c.png");
+            btnExtras.ClientRectangle = new Rectangle(btnExtras.LocationCN.X, btnExtras.LocationCN.Y, btnExtras.SizeCN.X, btnExtras.SizeCN.Y);
+            
+            btnExit.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/exitgame.png");
+            btnExit.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/exitgame_c.png");
+            btnExit.ClientRectangle = new Rectangle(btnExit.LocationCN.X, btnExit.LocationCN.Y, btnExit.SizeCN.X, btnExit.SizeCN.Y);
+            
+            lblLanguage.Text = "Menu Language: < Chinese >".L10N("Client:Main:Chinese");
+        }
+
+        private void ChangeToEnglishBtn()
+        {
+            btnNewCampaign.IdleTexture = AssetLoader.LoadTexture("MainMenu/campaign.png");
+            btnNewCampaign.HoverTexture = AssetLoader.LoadTexture("MainMenu/campaign_c.png");
+            btnNewCampaign.ClientRectangle = new Rectangle(btnNewCampaign.LocationEN.X, btnNewCampaign.LocationEN.Y, btnNewCampaign.SizeEN.X, btnNewCampaign.SizeEN.Y);
+            
+            btnLoadGame.IdleTexture = AssetLoader.LoadTexture("MainMenu/loadmission.png");
+            btnLoadGame.HoverTexture = AssetLoader.LoadTexture("MainMenu/loadmission_c.png");
+            btnLoadGame.ClientRectangle = new Rectangle(btnLoadGame.LocationEN.X, btnLoadGame.LocationEN.Y, btnLoadGame.SizeEN.X, btnLoadGame.SizeEN.Y);
+            
+            btnSkirmish.IdleTexture = AssetLoader.LoadTexture("MainMenu/skirmish.png");
+            btnSkirmish.HoverTexture = AssetLoader.LoadTexture("MainMenu/skirmish_c.png");
+            btnSkirmish.ClientRectangle = new Rectangle(btnSkirmish.LocationEN.X, btnSkirmish.LocationEN.Y, btnSkirmish.SizeEN.X, btnSkirmish.SizeEN.Y);
+            
+            btnCnCNet.IdleTexture = AssetLoader.LoadTexture("MainMenu/cncnet.png");
+            btnCnCNet.HoverTexture = AssetLoader.LoadTexture("MainMenu/cncnet_c.png");
+            btnCnCNet.ClientRectangle = new Rectangle(btnCnCNet.LocationEN.X, btnCnCNet.LocationEN.Y, btnCnCNet.SizeEN.X, btnCnCNet.SizeEN.Y);
+            
+            btnLan.IdleTexture = AssetLoader.LoadTexture("MainMenu/lan.png");
+            btnLan.HoverTexture = AssetLoader.LoadTexture("MainMenu/lan_c.png");
+            btnLan.ClientRectangle = new Rectangle(btnLan.LocationEN.X, btnLan.LocationEN.Y, btnLan.SizeEN.X, btnLan.SizeEN.Y);
+            
+            btnOptions.IdleTexture = AssetLoader.LoadTexture("MainMenu/options.png");
+            btnOptions.HoverTexture = AssetLoader.LoadTexture("MainMenu/options_c.png");
+            btnOptions.ClientRectangle = new Rectangle(btnOptions.LocationEN.X, btnOptions.LocationEN.Y, btnOptions.SizeEN.X, btnOptions.SizeEN.Y);
+            
+            btnMapEditor.IdleTexture = AssetLoader.LoadTexture("MainMenu/mapeditor.png");
+            btnMapEditor.HoverTexture = AssetLoader.LoadTexture("MainMenu/mapeditor_c.png");
+            btnMapEditor.ClientRectangle = new Rectangle(btnMapEditor.LocationEN.X, btnMapEditor.LocationEN.Y, btnMapEditor.SizeEN.X, btnMapEditor.SizeEN.Y);
+            
+            btnStatistics.IdleTexture = AssetLoader.LoadTexture("MainMenu/statistics.png");
+            btnStatistics.HoverTexture = AssetLoader.LoadTexture("MainMenu/statistics_c.png");
+            btnStatistics.ClientRectangle = new Rectangle(btnStatistics.LocationEN.X, btnStatistics.LocationEN.Y, btnStatistics.SizeEN.X, btnStatistics.SizeEN.Y);
+            
+            btnCredits.IdleTexture = AssetLoader.LoadTexture("MainMenu/credits.png");
+            btnCredits.HoverTexture = AssetLoader.LoadTexture("MainMenu/credits_c.png");
+            btnCredits.ClientRectangle = new Rectangle(btnCredits.LocationEN.X, btnCredits.LocationEN.Y, btnCredits.SizeEN.X, btnCredits.SizeEN.Y);
+            
+            btnExtras.IdleTexture = AssetLoader.LoadTexture("MainMenu/extras.png");
+            btnExtras.HoverTexture = AssetLoader.LoadTexture("MainMenu/extras_c.png");
+            btnExtras.ClientRectangle = new Rectangle(btnExtras.LocationEN.X, btnExtras.LocationEN.Y, btnExtras.SizeEN.X, btnExtras.SizeEN.Y);
+            
+            btnExit.IdleTexture = AssetLoader.LoadTexture("MainMenu/exitgame.png");
+            btnExit.HoverTexture = AssetLoader.LoadTexture("MainMenu/exitgame_c.png");
+            btnExit.ClientRectangle = new Rectangle(btnExit.LocationEN.X, btnExit.LocationEN.Y, btnExit.SizeEN.X, btnExit.SizeEN.Y);
+            
+            lblLanguage.Text = "Menu Language: < English >".L10N("Client:Main:English");
+        }
+
+        private void lblLanguage_LeftClick(object sender, EventArgs e)
+        {
+            if (UserINISettings.Instance.MenuTextIsEnglish)
+            {
+                ChangeToChineseBtn();
+                UserINISettings.Instance.ReloadSettings();
+                UserINISettings.Instance.MenuTextIsEnglish.Value = false;
+                UserINISettings.Instance.SaveSettings();
+            }
+            else
+            {
+                ChangeToEnglishBtn();
+                UserINISettings.Instance.ReloadSettings();
+                UserINISettings.Instance.MenuTextIsEnglish.Value = true;
+                UserINISettings.Instance.SaveSettings();
+            }
         }
 
         private void SetButtonHotkeys(bool enableHotkeys)

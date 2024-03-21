@@ -4,11 +4,17 @@ using Rampastring.Tools;
 using System;
 using ClientCore;
 using ClientCore.Extensions;
+using Microsoft.Xna.Framework;
 
 namespace ClientGUI
 {
     public class XNAClientButton : XNAButton, IToolTipContainer
     {
+        public Point LocationCN;
+        public Point SizeCN;
+        public Point LocationEN;
+        public Point SizeEN;
+
         public ToolTip ToolTip { get; private set; }
 
         private string _initialToolTipText;
@@ -62,6 +68,34 @@ namespace ClientGUI
             else if (key == "ToolTip")
             {
                 ToolTipText = value.FromIniString();
+                return;
+            }
+            else if (key == "LocationEN")
+            {
+                string[] strPoint = value.Split(',');
+                LocationEN.X = Conversions.IntFromString(strPoint[0], 0);
+                LocationEN.Y = Conversions.IntFromString(strPoint[1], 0);
+                return;
+            }
+            else if (key == "SizeEN")
+            {
+                string[] strPoint = value.Split(',');
+                SizeEN.X = Conversions.IntFromString(strPoint[0], 0);
+                SizeEN.Y = Conversions.IntFromString(strPoint[1], 0);
+                return;
+            }
+            else if (key == "LocationCN")
+            {
+                string[] strPoint = value.Split(',');
+                LocationCN.X = Conversions.IntFromString(strPoint[0], 0);
+                LocationCN.Y = Conversions.IntFromString(strPoint[1], 0);
+                return;
+            }
+            else if (key == "SizeCN")
+            {
+                string[] strPoint = value.Split(',');
+                SizeCN.X = Conversions.IntFromString(strPoint[0], 0);
+                SizeCN.Y = Conversions.IntFromString(strPoint[1], 0);
                 return;
             }
 
