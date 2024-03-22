@@ -315,12 +315,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             ddFilTheater = FindChild<XNAClientDropDown>(nameof(ddFilTheater));
             ddFilTheater.AddItem("-");
-            ddFilTheater.AddItem("TEMPERATE");
-            ddFilTheater.AddItem("DESERT");
-            ddFilTheater.AddItem("SNOW");
-            ddFilTheater.AddItem("LUNAR");
-            ddFilTheater.AddItem("URBAN");
-            ddFilTheater.AddItem("NEWURBAN");
+            ddFilTheater.AddItem(new XNADropDownItem { Text = "TEMPERATE".L10N("Client:Main:ddTEMPERATE"), Tag = "TEMPERATE" });
+            ddFilTheater.AddItem(new XNADropDownItem { Text = "DESERT".L10N("Client:Main:ddDESERT"), Tag = "DESERT" });
+            ddFilTheater.AddItem(new XNADropDownItem { Text = "SNOW".L10N("Client:Main:ddSNOW"), Tag = "SNOW" });
+            ddFilTheater.AddItem(new XNADropDownItem { Text = "LUNAR".L10N("Client:Main:ddLUNAR"), Tag = "LUNAR" });
+            ddFilTheater.AddItem(new XNADropDownItem { Text = "URBAN".L10N("Client:Main:ddURBAN"), Tag = "URBAN" });
+            ddFilTheater.AddItem(new XNADropDownItem { Text = "NEWURBAN".L10N("Client:Main:ddNEWURBAN"), Tag = "NEWURBAN" });
             ddFilTheater.AllowDropDown = true;
             ddFilTheater.SelectedIndex = 0;
             ddFilTheater.SelectedIndexChanged += MapScreenActived;
@@ -652,7 +652,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
                 if (!ddFilTheater.SelectedItem.Text.Contains("-"))
                 {
-                    if (gameModeMap.Map.Theater != ddFilTheater.SelectedItem.Text)
+                    if (gameModeMap.Map.Theater != (string)ddFilTheater.SelectedItem.Tag)
                     {
                         skippedMapsCount++;
                         continue;
@@ -991,7 +991,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
                 if (!ddFilTheater.SelectedItem.Text.Contains("-"))
                 {
-                    if (GameMode.Maps[i].Theater != ddFilTheater.SelectedItem.Text)
+                    if (GameMode.Maps[i].Theater != (string)ddFilTheater.SelectedItem.Tag)
                     {
                         continue;
                     }
