@@ -91,7 +91,7 @@ namespace DTAClient.DXGUI.Generic
         private XNAProgressBar PrgMinValue;
         private XNAProgressBar PrgMaginotValue;
         private XNAProgressBar PrgBtValue;
-		
+
         //*******************************
 
         private StatisticsManager sm;
@@ -472,7 +472,7 @@ namespace DTAClient.DXGUI.Generic
             PrgShortValue.RemapColor = UISettings.ActiveSettings.AltColor;
             locationY += totalstatsyincrease;
 
-            Value[5, 1] = 200;
+            Value[5, 1] = 100;
             PrgSoldierValue = new XNAProgressBar(WindowManager);
             PrgSoldierValue.Name = "PrgSoldierValue";
             PrgSoldierValue.Maximum = (int)Value[5, 1];
@@ -480,7 +480,7 @@ namespace DTAClient.DXGUI.Generic
             PrgSoldierValue.RemapColor = UISettings.ActiveSettings.AltColor;
             locationY += totalstatsyincrease;
 
-            Value[6, 1] = 10;
+            Value[6, 1] = 50;
             PrgNavalValue = new XNAProgressBar(WindowManager);
             PrgNavalValue.Name = "PrgNavalValue";
             PrgNavalValue.Maximum = (int)Value[6, 1];
@@ -488,7 +488,7 @@ namespace DTAClient.DXGUI.Generic
             PrgNavalValue.RemapColor = UISettings.ActiveSettings.AltColor;
             locationY += totalstatsyincrease;
 
-            Value[7, 1] = 20;
+            Value[7, 1] = 30;
             PrgGermanyValue = new XNAProgressBar(WindowManager);
             PrgGermanyValue.Name = "PrgGermanyValue";
             PrgGermanyValue.Maximum = (int)Value[7, 1];
@@ -546,7 +546,7 @@ namespace DTAClient.DXGUI.Generic
             PrgMaginotValue.RemapColor = UISettings.ActiveSettings.AltColor;
             locationY += totalstatsyincrease;
 
-            Value[14, 1] = 20;
+            Value[14, 1] = 99;
             PrgBtValue = new XNAProgressBar(WindowManager);
             PrgBtValue.Name = "PrgBtValue";
             PrgBtValue.Maximum = (int)Value[14, 1];
@@ -618,7 +618,7 @@ namespace DTAClient.DXGUI.Generic
             locationY += totalstatsyincrease;
             AddAchBtn("PrgGermanyValue", "GermanyTitle".L10N("Client:Main:GermanyTitle"), "GermanyText".L10N("Client:Main:GermanyText"), new Point(totalstatslocationx1, locationY), 7);
             locationY += totalstatsyincrease;
-            AddAchBtn(" PrgOneValue", "OneTitle".L10N("Client:Main:OneTitle"), "OneText".L10N("Client:Main:OneText"), new Point(totalstatslocationx1, locationY), 8);
+            AddAchBtn("PrgOneValue", "OneTitle".L10N("Client:Main:OneTitle"), "OneText".L10N("Client:Main:OneText"), new Point(totalstatslocationx1, locationY), 8);
             locationY = totalstatsfirstitemy;
             AddAchBtn("PrgBulletsValue", "BulletsTitle".L10N("Client:Main:BulletsTitle"), "BulletsText".L10N("Client:Main:BulletsText"), new Point(totalstatslocationx2, locationY), 9);
             locationY += totalstatsyincrease;
@@ -661,17 +661,16 @@ namespace DTAClient.DXGUI.Generic
             btn.ClientRectangle = new Rectangle(location.X - 25, location.Y - 5, 100, 30);
             btn.IdleTexture = AssetLoader.LoadTexture("92pxbtn.png");
             btn.HoverTexture = AssetLoader.LoadTexture("92pxbtn_c.png");
+            btn.LeftClick += (s, e) => Messagebox(Title, Content, i);
+            panelAchStatistics.AddChild(btn);
+        }
+
+        private void Messagebox(string Title, string Content, int i)
+        {
             if (Value[i, 0] < Value[i, 1])
                 Content += "          " + Value[i, 0].ToString() + "/" + Value[i, 1].ToString();
             else
                 Content += "          100%".L10N("Client:Main:100%");
-            btn.LeftClick += (s, e) => Messagebox(Title, Content);
-            panelAchStatistics.AddChild(btn);
-
-        }
-
-        private void Messagebox(string Title, string Content)
-        {
             XNAMessageBox messageBox = new XNAMessageBox(WindowManager, Title, Content, XNAMessageBoxButtons.OK);
             messageBox.Show();
         }
@@ -1244,7 +1243,7 @@ namespace DTAClient.DXGUI.Generic
             {
                 MatchStatistics ms = sm.GetMatchByIndex(gameIndex);
                 PlayerStatistics localPlayer = FindLocalPlayer(ms);
-                if (ms.GameMode == "海战")
+                if (ms.GameMode == "Navalwar")
                 {
                     Value[6, 0]++;
                 }
@@ -1260,7 +1259,7 @@ namespace DTAClient.DXGUI.Generic
                             Value[7, 0]++;
                         if (ms.GetPlayerCount() == 2)
                             Value[8, 0]++;
-                        if (ms.MapName == "(8) 冰天雪地" || ms.MapName == "[8]冰天雪地")
+                        if (ms.MapName == "XMP32S8" || ms.MapName == "xmp32mw" || ms.MapName == "mp32du" || ms.MapName == "heckfreezesover")
                             Value[14, 0]++;
                         if (localPlayer.Side == 3)
                         {
