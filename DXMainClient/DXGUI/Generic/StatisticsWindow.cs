@@ -44,8 +44,8 @@ namespace DTAClient.DXGUI.Generic
 
         private const int TOTAL_STATS_LOCATION_X1 = 40;
         private const int TOTAL_STATS_VALUE_LOCATION_X1 = 240;
-        private const int TOTAL_STATS_LOCATION_X2 = 380;
-        private const int TOTAL_STATS_VALUE_LOCATION_X2 = 580;
+        private const int TOTAL_STATS_LOCATION_X2 = 400;
+        private const int TOTAL_STATS_VALUE_LOCATION_X2 = 600;
         private const int TOTAL_STATS_Y_INCREASE = 45;
         private const int TOTAL_STATS_FIRST_ITEM_Y = 20;
 
@@ -602,35 +602,35 @@ namespace DTAClient.DXGUI.Generic
             StatisticsManager.Instance.GameAdded += Instance_GameAdded;
 
             locationY = totalstatsfirstitemy;
-            AddAchBtn("btnhardened", "hardenedTitle".L10N("Client:Main:hardenedTitle"), "hardenedText".L10N("Client:Main:hardenedText"), new Point(totalstatslocationx1, locationY), 0);
+            AddAchBtn("btnhardened", "Battle-hardened".L10N("Client:Main:hardenedTitle"), "Ten years old players, what do not understand can ask me! : Complete 2000 matches".L10N("Client:Main:hardenedText"), new Point(totalstatslocationx1, locationY), 0);
             locationY += totalstatsyincrease;
-            AddAchBtn("lblkillValue", "killTitle".L10N("Client:Main:killTitle"), "killText".L10N("Client:Main:killText"), new Point(totalstatslocationx1, locationY), 1);
+            AddAchBtn("lblkillValue", "Kill like a stone".L10N("Client:Main:killTitle"), "I said I would kill. You asked me if my eyes were dry? Cumulative destruction reached 1,000,000".L10N("Client:Main:killText"), new Point(totalstatslocationx1, locationY), 1);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgVictorValue", "VictorTitle".L10N("Client:Main:VictorTitle"), "VictorText".L10N("Client:Main:VictorText"), new Point(totalstatslocationx1, locationY), 2);
+            AddAchBtn("PrgVictorValue", "Always victorious".L10N("Client:Main:VictorTitle"), "Just a stroke of luck! Win/loss ratio reached 10 (0.9 win percentage)".L10N("Client:Main:VictorText"), new Point(totalstatslocationx1, locationY), 2);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgLongValue", "LongTitle".L10N("Client:Main:LongTitle"), "LongText".L10N("Client:Main:LongText"), new Point(totalstatslocationx1, locationY), 3);
+            AddAchBtn("PrgLongValue", "Boil eagle".L10N("Client:Main:LongTitle"), "I have two computers. Who's afraid of who? : Complete 200 45 minute matches".L10N("Client:Main:LongText"), new Point(totalstatslocationx1, locationY), 3);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgShortValue", "ShortTitle".L10N("Client:Main:ShortTitle"), "ShortText".L10N("Client:Main:ShortText"), new Point(totalstatslocationx1, locationY), 4);
+            AddAchBtn("PrgShortValue", "Blitzkrieg".L10N("Client:Main:ShortTitle"), "Throw punches and kill the old master. : Complete 200 matches under 10 minutes".L10N("Client:Main:ShortText"), new Point(totalstatslocationx1, locationY), 4);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgSoldierValue", "SoldierTitle".L10N("Client:Main:SoldierTitle"), "SoldierText".L10N("Client:Main:SoldierText"), new Point(totalstatslocationx1, locationY), 5);
+            AddAchBtn("PrgSoldierValue", "Love soldiers".L10N("Client:Main:SoldierTitle"), "We have very precise blood volume control. : Complete 200 matches with less than 10 losses".L10N("Client:Main:SoldierText"), new Point(totalstatslocationx1, locationY), 5);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgNavalValue", "NavalTitle".L10N("Client:Main:NavalTitle"), "NavalText".L10N("Client:Main:NavalText"), new Point(totalstatslocationx1, locationY), 6);
+            AddAchBtn("PrgNavalValue", "One Piece".L10N("Client:Main:NavalTitle"), "I want to be One Piece, not One Piece! Complete 10 naval battles".L10N("Client:Main:NavalText"), new Point(totalstatslocationx1, locationY), 6);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgGermanyValue", "GermanyTitle".L10N("Client:Main:GermanyTitle"), "GermanyText".L10N("Client:Main:GermanyText"), new Point(totalstatslocationx1, locationY), 7);
+            AddAchBtn("PrgGermanyValue", "Convince by virtue".L10N("Client:Main:GermanyTitle"), "Persuade by virtue (physics). Win 20 matches with Germany".L10N("Client:Main:GermanyText"), new Point(totalstatslocationx1, locationY), 7);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgOneValue", "OneTitle".L10N("Client:Main:OneTitle"), "OneText".L10N("Client:Main:OneText"), new Point(totalstatslocationx1, locationY), 8);
+            AddAchBtn("PrgOneValue", "King of singles".L10N("Client:Main:OneTitle"), "The single king is back. Win 200 singles matches".L10N("Client:Main:OneText"), new Point(totalstatslocationx1, locationY), 8);
             locationY = totalstatsfirstitemy;
-            AddAchBtn("PrgBulletsValue", "BulletsTitle".L10N("Client:Main:BulletsTitle"), "BulletsText".L10N("Client:Main:BulletsText"), new Point(totalstatslocationx2, locationY), 9);
+            AddAchBtn("PrgBulletsValue", "Bullets rained down".L10N("Client:Main:BulletsTitle"), "Report! Pilot's back with a steering wheel! : Complete 200 matches with destruction greater than 100".L10N("Client:Main:BulletsText"), new Point(totalstatslocationx2, locationY), 9);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgFkyValue", "FkyTitle".L10N("Client:Main:FkyTitle"), "FkyText".L10N("Client:Main:FkyText"), new Point(totalstatslocationx2, locationY), 10);
+            AddAchBtn("PrgFkyValue", "Fuck Yuri".L10N("Client:Main:FkyTitle"), "This is destiny: Use France to win 20 games against Yuri".L10N("Client:Main:FkyText"), new Point(totalstatslocationx2, locationY), 10);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgMaxValue", "MaxTitle".L10N("Client:Main:MaxTitle"), "MaxText".L10N("Client:Main:MaxText"), new Point(totalstatslocationx2, locationY), 11);
+            AddAchBtn("PrgMaxValue", "Endeavour".L10N("Client:Main:MaxTitle"), "How can you play when all your teammates are cute? : Top rated but lost 100 games".L10N("Client:Main:MaxText"), new Point(totalstatslocationx2, locationY), 11);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgMaxValue", "MinTitle".L10N("Client:Main:MinTitle"), "MinText".L10N("Client:Main:MinText"), new Point(totalstatslocationx2, locationY), 12);
+            AddAchBtn("PrgMinValue", "Lie down to win".L10N("Client:Main:MinTitle"), "Beneficiaries of the ELO mechanism. Lowest rating yet 100 wins".L10N("Client:Main:MinText"), new Point(totalstatslocationx2, locationY), 12);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgMaginotValue", "MaginotTitle".L10N("Client:Main:MaginotTitle"), "MaginotText".L10N("Client:Main:MaginotText"), new Point(totalstatslocationx2, locationY), 13);
+            AddAchBtn("PrgMaginotValue", "Maginot line".L10N("Client:Main:MaginotTitle"), "Why don't you come at me? : Use France and reach 400 to build 20 matches".L10N("Client:Main:MaginotText"), new Point(totalstatslocationx2, locationY), 13);
             locationY += totalstatsyincrease;
-            AddAchBtn("PrgBtValue", "BtTitle".L10N("Client:Main:BtTitle"), "BtText".L10N("Client:Main:BtText"), new Point(totalstatslocationx2, locationY),14);
+            AddAchBtn("PrgBtValue", "Know the trees".L10N("Client:Main:BtTitle"), "I know how many trees there are in the BT-maps: play (big)BT-maps 20 times".L10N("Client:Main:BtText"), new Point(totalstatslocationx2, locationY),14);
             locationY += totalstatsyincrease;
         }
 
