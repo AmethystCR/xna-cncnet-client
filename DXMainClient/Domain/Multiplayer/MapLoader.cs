@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using ClientCore;
+using ClientCore.Extensions;
 using Rampastring.Tools;
 
 namespace DTAClient.Domain.Multiplayer
@@ -259,7 +260,7 @@ namespace DTAClient.Domain.Multiplayer
             if (!customMapFile.Exists)
             {
                 Logger.Log("LoadCustomMap: Map " + customMapFile.FullName + " not found!");
-                resultMessage = $"Map file {customMapFile.Name} doesn't exist!";
+                resultMessage = string.Format("Map file {0} doesn't exist!".L10N("Client:Main:MapNoExist"), customMapFile.Name);
 
                 return null;
             }
@@ -275,7 +276,7 @@ namespace DTAClient.Domain.Multiplayer
                     if (gm.Maps.Find(m => m.SHA1 == map.SHA1) != null)
                     {
                         Logger.Log("LoadCustomMap: Custom map " + customMapFile.FullName + " is already loaded!");
-                        resultMessage = $"Map {map.Name} is already loaded.";
+                        resultMessage = string.Format("Map {0} is already loaded.".L10N("Client:Main:MapAlreadyLoaded"), map.Name);
 
                         return null;
                     }
@@ -287,13 +288,13 @@ namespace DTAClient.Domain.Multiplayer
                 var gameModes = GameModes.Where(gm => gm.Maps.Contains(map));
                 GameModeMaps.AddRange(gameModes.Select(gm => new GameModeMap(gm, map, false)));
 
-                resultMessage = $"Map {map.Name} loaded successfully.";
+                resultMessage = string.Format("Map {0} loaded successfully.".L10N("Client:Main:MapLoadSuccess"), map.Name);
 
                 return map;
             }
 
             Logger.Log("LoadCustomMap: Loading map " + customMapFile.FullName + " failed!");
-            resultMessage = $"Loading map {Path.GetFileNameWithoutExtension(customMapFile.Name)} failed!";
+            resultMessage = string.Format("Loading map {0} failed!".L10N("Client:Main:MapLoadFail"), Path.GetFileNameWithoutExtension(customMapFile.Name));
 
             return null;
         }

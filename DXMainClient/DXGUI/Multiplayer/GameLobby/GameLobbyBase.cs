@@ -296,7 +296,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             lblplayerNumbers = FindChild<XNALabel>(nameof(lblplayerNumbers));
             lblAuthor = FindChild<XNALabel>(nameof(lblAuthor));
             lblFilTheater = FindChild<XNALabel>(nameof(lblFilTheater));
-            
+
             ddplayerNumbers = FindChild<XNAClientDropDown>(nameof(ddplayerNumbers));
             ddplayerNumbers.AddItem("-");
             ddplayerNumbers.AddItem("2");
