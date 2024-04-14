@@ -1259,7 +1259,7 @@ namespace DTAClient.DXGUI.Generic
                             Value[7, 0]++;
                         if (ms.GetPlayerCount() == 2)
                             Value[8, 0]++;
-                        if (ms.MapName == "XMP32S8" || ms.MapName == "xmp32mw" || ms.MapName == "mp32du" || ms.MapName == "heckfreezesover")
+                        if (ms.MapName == "(8) Heck Freezes Over" || ms.MapName == "(8) heckfreezesover")
                             Value[14, 0]++;
                         if (localPlayer.Side == 3)
                         {
