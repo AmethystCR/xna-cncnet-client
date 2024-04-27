@@ -3,6 +3,7 @@ using ClientCore;
 using ClientCore.CnCNet5;
 using ClientGUI;
 using Microsoft.Xna.Framework;
+using Rampastring.Tools;
 using Rampastring.XNAUI;
 using Rampastring.XNAUI.XNAControls;
 using System;
@@ -217,16 +218,18 @@ namespace DTAConfig.OptionPanels
 
             gameListPanel.AddChild(lblFollowedGames);
 
+            var OptionsIni = new IniFile(SafePath.CombineFilePath(ProgramConstants.GetResourcePath(), "OptionsWindow.ini"));
+
             // Max number of games per column
-            const int maxGamesPerColumn = 4;
+            int maxGamesPerColumn = OptionsIni.GetIntValue("OptionsWindow", "maxGamesPerColumn", 4);
             // Spacing buffer between columns
-            const int columnBuffer = 20;
+            int columnBuffer = OptionsIni.GetIntValue("OptionsWindow", "columnBuffer", 20);
             // Spacing buffer between rows
-            const int rowBuffer = 22;
+            int rowBuffer = OptionsIni.GetIntValue("OptionsWindow", "rowBuffer", 22);
             // Render width of a game icon
-            const int gameIconWidth = 16;
+            int gameIconWidth = OptionsIni.GetIntValue("OptionsWindow", "gameIconWidth", 16);
             // Spacing buffer between game icon and game check box
-            const int gameIconBuffer = 6;
+            int gameIconBuffer = OptionsIni.GetIntValue("OptionsWindow", "gameIconBuffer", 6);
 
             // List of supported games
             IEnumerable<CnCNetGame> supportedGames = gameCollection.GameList
