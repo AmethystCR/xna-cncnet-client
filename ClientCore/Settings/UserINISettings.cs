@@ -57,7 +57,7 @@ namespace ClientCore
 
             IngameScreenWidth = new IntSetting(iniFile, VIDEO, "ScreenWidth", 1024);
             IngameScreenHeight = new IntSetting(iniFile, VIDEO, "ScreenHeight", 768);
-            CustonIngameResolution = new BoolSetting(iniFile, VIDEO, "CustonIngameResolution", false);
+            CustomIngameResolution = new BoolSetting(iniFile, VIDEO, "CustomIngameResolution", false);
             ClientTheme = new StringSetting(iniFile, MULTIPLAYER, "Theme", ClientConfiguration.Instance.GetThemeInfoFromIndex(0).Name);
             Translation = new StringSetting(iniFile, OPTIONS, "Translation", I18N.Translation.GetDefaultTranslationLocaleCode());
             DetailLevel = new IntSetting(iniFile, OPTIONS, "DetailLevel", 2);
@@ -150,7 +150,7 @@ namespace ClientCore
         public StringSetting Renderer { get; private set; }
         public BoolSetting WindowedMode { get; private set; }
         public BoolSetting BorderlessWindowedMode { get; private set; }
-        public BoolSetting CustonIngameResolution { get; private set; }
+        public BoolSetting CustomIngameResolution { get; private set; }
         public BoolSetting BackBufferInVRAM { get; private set; }
         public IntSetting ClientResolutionX { get; set; }
         public IntSetting ClientResolutionY { get; set; }

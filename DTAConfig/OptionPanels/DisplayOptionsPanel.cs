@@ -698,7 +698,7 @@ namespace DTAConfig.OptionPanels
             LoadRenderer();
             ddDetailLevel.SelectedIndex = UserINISettings.Instance.DetailLevel;
 
-            if (IniSettings.CustonIngameResolution.Value)
+            if (IniSettings.CustomIngameResolution.Value)
             {
                 chkCustomIngameResolution.Checked = true;
                 int closestIndex = 0;
@@ -845,11 +845,11 @@ namespace DTAConfig.OptionPanels
             if (chkCustomIngameResolution.Checked)
             {
                 ingameRes = new int[2] { int.Parse(tbIngameResolutionX.Text), int.Parse(tbIngameResolutionY.Text) };
-                IniSettings.CustonIngameResolution.Value = true;
+                IniSettings.CustomIngameResolution.Value = true;
             }
             else
             {
-                IniSettings.CustonIngameResolution.Value = false;
+                IniSettings.CustomIngameResolution.Value = false;
 
                 string[] resolution = ddIngameResolution.SelectedItem.Text.Split('x');
 
