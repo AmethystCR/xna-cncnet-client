@@ -140,6 +140,7 @@ namespace DTAClient.DXGUI.Generic
         private XNAClientButton btnMapEditor;
         private XNAClientButton btnStatistics;
         private XNAClientButton btnCredits;
+        private XNAClientButton btnDatabase;
         private XNAClientButton btnExtras;
         private XNAClientButton btnExit;
         private XNAClientButton btnAssistA;
@@ -222,6 +223,13 @@ namespace DTAClient.DXGUI.Generic
             btnCredits.HoverSoundEffect = new EnhancedSoundEffect("MainMenu/button.wav");
             btnCredits.LeftClick += BtnCredits_LeftClick;
 
+            btnDatabase = new XNAClientButton(WindowManager);
+            btnDatabase.Name = nameof(btnDatabase);
+            btnDatabase.IdleTexture = AssetLoader.LoadTexture("MainMenu/database.png");
+            btnDatabase.HoverTexture = AssetLoader.LoadTexture("MainMenu/database_c.png");
+            btnDatabase.HoverSoundEffect = new EnhancedSoundEffect("MainMenu/button.wav");
+            btnDatabase.LeftClick += BtnDatabase_LeftClick;
+
             btnExtras = new XNAClientButton(WindowManager);
             btnExtras.Name = nameof(btnExtras);
             btnExtras.IdleTexture = AssetLoader.LoadTexture("MainMenu/extras.png");
@@ -299,6 +307,7 @@ namespace DTAClient.DXGUI.Generic
             AddChild(btnMapEditor);
             AddChild(btnStatistics);
             AddChild(btnCredits);
+            AddChild(btnDatabase);
             AddChild(btnExtras);
             AddChild(btnExit);
             AddChild(btnAssistA);
@@ -475,6 +484,10 @@ namespace DTAClient.DXGUI.Generic
             btnCredits.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/credits_c.png");
             btnCredits.ClientRectangle = new Rectangle(btnCredits.LocationCN.X, btnCredits.LocationCN.Y, btnCredits.SizeCN.X, btnCredits.SizeCN.Y);
             
+            btnDatabase.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/database.png");
+            btnDatabase.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/database_c.png");
+            btnDatabase.ClientRectangle = new Rectangle(btnDatabase.LocationCN.X, btnDatabase.LocationCN.Y, btnDatabase.SizeCN.X, btnDatabase.SizeCN.Y);
+            
             btnExtras.IdleTexture = AssetLoader.LoadTexture("MainMenu/CN/extras.png");
             btnExtras.HoverTexture = AssetLoader.LoadTexture("MainMenu/CN/extras_c.png");
             btnExtras.ClientRectangle = new Rectangle(btnExtras.LocationCN.X, btnExtras.LocationCN.Y, btnExtras.SizeCN.X, btnExtras.SizeCN.Y);
@@ -524,6 +537,10 @@ namespace DTAClient.DXGUI.Generic
             btnCredits.HoverTexture = AssetLoader.LoadTexture("MainMenu/credits_c.png");
             btnCredits.ClientRectangle = new Rectangle(btnCredits.LocationEN.X, btnCredits.LocationEN.Y, btnCredits.SizeEN.X, btnCredits.SizeEN.Y);
             
+            btnDatabase.IdleTexture = AssetLoader.LoadTexture("MainMenu/database.png");
+            btnDatabase.HoverTexture = AssetLoader.LoadTexture("MainMenu/database_c.png");
+            btnDatabase.ClientRectangle = new Rectangle(btnDatabase.LocationEN.X, btnDatabase.LocationEN.Y, btnDatabase.SizeEN.X, btnDatabase.SizeEN.Y);
+            
             btnExtras.IdleTexture = AssetLoader.LoadTexture("MainMenu/extras.png");
             btnExtras.HoverTexture = AssetLoader.LoadTexture("MainMenu/extras_c.png");
             btnExtras.ClientRectangle = new Rectangle(btnExtras.LocationEN.X, btnExtras.LocationEN.Y, btnExtras.SizeEN.X, btnExtras.SizeEN.Y);
@@ -569,6 +586,7 @@ namespace DTAClient.DXGUI.Generic
                 btnMapEditor.HotKey = Keys.E;
                 btnStatistics.HotKey = Keys.T;
                 btnCredits.HotKey = Keys.R;
+                btnDatabase.HotKey = Keys.D;
                 btnExtras.HotKey = Keys.X;
             }
             else
@@ -582,6 +600,7 @@ namespace DTAClient.DXGUI.Generic
                 btnMapEditor.HotKey = Keys.None;
                 btnStatistics.HotKey = Keys.None;
                 btnCredits.HotKey = Keys.None;
+                btnDatabase.HotKey = Keys.None;
                 btnExtras.HotKey = Keys.None;
             }
         }
@@ -1093,10 +1112,11 @@ namespace DTAClient.DXGUI.Generic
         private void BtnStatistics_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.StatisticsWindow);
 
-        private void BtnCredits_LeftClick(object sender, EventArgs e)
-        {
+        private void BtnCredits_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.CreditsWindow);
-        }
+
+        private void BtnDatabase_LeftClick(object sender, EventArgs e) =>
+            innerPanel.Show(innerPanel.DatabaseWindow);
 
         private void BtnExtras_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.ExtrasWindow);
