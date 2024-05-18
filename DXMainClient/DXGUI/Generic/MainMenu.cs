@@ -374,7 +374,7 @@ namespace DTAClient.DXGUI.Generic
 
             UserINISettings.Instance.SettingsSaved += SettingsSaved;
 
-            if (UserINISettings.Instance.ClientTheme == "2-D")
+            if (UserINISettings.Instance.ClientTheme == ClientConfiguration.Instance.GetThemeInfoFromIndex(6).Name)
             {
                 if (!UserINISettings.Instance.MenuIsAssistA)
                     ChangeToAssistB();
@@ -386,7 +386,9 @@ namespace DTAClient.DXGUI.Generic
                 lblAssist.Disable();
                 lblAssist.Visible = false;
             }
-            if (UserINISettings.Instance.ClientTheme == "2-D" || UserINISettings.Instance.ClientTheme == "GaxlayB" )
+            if (UserINISettings.Instance.ClientTheme == ClientConfiguration.Instance.GetThemeInfoFromIndex(6).Name
+             || UserINISettings.Instance.ClientTheme == ClientConfiguration.Instance.GetThemeInfoFromIndex(5).Name
+             || UserINISettings.Instance.ClientTheme == ClientConfiguration.Instance.GetThemeInfoFromIndex(4).Name)
             {
                 if (!UserINISettings.Instance.MenuTextIsEnglish)
                     ChangeToChineseBtn();
