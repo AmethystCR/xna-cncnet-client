@@ -46,9 +46,9 @@ namespace DTAClient.DXGUI.Generic
         private string GetBackgroundName(int id)
         {
             if (id == 0)
-                return "loadingscreen.png";
+                return "LoadingScreens/loadingscreen.png";
             else
-                return "loadingscreen" + id.ToString(System.Globalization.CultureInfo.InvariantCulture) + ".png";
+                return "LoadingScreens/loadingscreen" + id.ToString(System.Globalization.CultureInfo.InvariantCulture) + ".png";
         }
 
         public override void Initialize()
