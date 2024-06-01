@@ -41,15 +41,22 @@ namespace DTAClient.DXGUI.Generic
             btnExCredits.Text = "Credits".L10N("Client:Main:Credits");
             btnExCredits.LeftClick += BtnExCredits_LeftClick;
 
+            var btnExDatabase = new XNAClientButton(WindowManager);
+            btnExDatabase.Name = "btnExDatabase";
+            btnExDatabase.ClientRectangle = new Rectangle(76, 143, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
+            btnExDatabase.Text = "Database".L10N("Client:Main:Database");
+            btnExDatabase.LeftClick += BtnExDatabase_LeftClick;
+
             var btnExCancel = new XNAClientButton(WindowManager);
             btnExCancel.Name = "btnExCancel";
-            btnExCancel.ClientRectangle = new Rectangle(76, 160, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
+            btnExCancel.ClientRectangle = new Rectangle(76, 185, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
             btnExCancel.Text = "Cancel".L10N("Client:Main:ButtonCancel");
             btnExCancel.LeftClick += BtnExCancel_LeftClick;
 
             AddChild(btnExStatistics);
             AddChild(btnExMapEditor);
             AddChild(btnExCredits);
+            AddChild(btnExDatabase);
             AddChild(btnExCancel);
 
             base.Initialize();
@@ -107,6 +114,12 @@ namespace DTAClient.DXGUI.Generic
         {
             MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
             parent.Show(parent.CreditsWindow);
+        }
+
+        private void BtnExDatabase_LeftClick(object sender, EventArgs e)
+        {
+            MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
+            parent.Show(parent.DatabaseWindow);
         }
 
         private void BtnExCancel_LeftClick(object sender, EventArgs e)
