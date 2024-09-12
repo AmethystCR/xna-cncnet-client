@@ -688,7 +688,12 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 lbGameModeMapList.AddItem(mapInfoArray);
 
+                // Preserve the selected map
                 if (gameModeMap == GameModeMap)
+                    mapIndex = i - skippedMapsCount;
+
+                // Preserve the selected map, even if the game mode has changed
+                if (mapIndex == -1 && (gameModeMap?.Map?.Equals(GameModeMap?.Map) ?? false))
                     mapIndex = i - skippedMapsCount;
             }
 
@@ -700,6 +705,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
 
             lbGameModeMapList.SelectedIndexChanged += LbGameModeMapList_SelectedIndexChanged;
+            // Trigger the event manually to update GameModeMap
+            LbGameModeMapList_SelectedIndexChanged();
         }
 
         protected abstract int GetDefaultMapRankIndex(GameModeMap gameModeMap);
@@ -816,7 +823,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             }
         }
 
-        private void LbGameModeMapList_SelectedIndexChanged(object sender, EventArgs e)
+        private void LbGameModeMapList_SelectedIndexChanged()
         {
             if (lbGameModeMapList.SelectedIndex < 0 || lbGameModeMapList.SelectedIndex >= lbGameModeMapList.ItemCount)
             {
@@ -826,10 +833,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             XNAListBoxItem item = lbGameModeMapList.GetItem(1, lbGameModeMapList.SelectedIndex);
 
-            GameModeMap = (GameModeMap)item.Tag;
+            GameModeMap gameModeMap = (GameModeMap)item.Tag;
 
-            ChangeMap(GameModeMap);
+            ChangeMap(gameModeMap);
         }
+
+        private void LbGameModeMapList_SelectedIndexChanged(object sender, EventArgs e)
+            => LbGameModeMapList_SelectedIndexChanged();
 
         private void LbGameModeMapList_HoveredIndexChanged(object sender, EventArgs e)
         {
