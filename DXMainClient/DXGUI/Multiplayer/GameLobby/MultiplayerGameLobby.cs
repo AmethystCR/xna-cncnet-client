@@ -877,7 +877,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 if (player.Name == ProgramConstants.PLAYERNAME)
                     continue;
 
-                if (!player.Verified)
+                if (!player.HashReceived)
                 {
                     NotVerifiedNotification(iId - 1);
                     return;
@@ -1032,7 +1032,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             // Player statuses
             for (int pId = 0; pId < Players.Count; pId++)
             {
-                /* if (pId != 0 && !Players[pId].Verified) // If player is not verified (not counting the host)
+                /* if (pId != 0 && !Players[pId].HashReceived) // If player is not verified (not counting the host)
                 {
                     StatusIndicators[pId].SwitchTexture("error");
                 }
