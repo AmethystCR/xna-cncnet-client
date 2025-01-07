@@ -16,6 +16,7 @@ using DTAClient.Domain;
 using Microsoft.Xna.Framework.Graphics;
 using ClientCore.Extensions;
 using System.Diagnostics;
+using DTAClient.DXGUI.Multiplayer.CnCNet;
 
 namespace DTAClient.DXGUI.Multiplayer.GameLobby
 {
@@ -28,7 +29,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         private const int MAX_DIE_SIDES = 100;
 
         public MultiplayerGameLobby(WindowManager windowManager, string iniName,
-            TopBar topBar, MapLoader mapLoader, DiscordHandler discordHandler)
+            TopBar topBar, MapLoader mapLoader, DiscordHandler discordHandler, PrivateMessagingWindow pmWindow)
             : base(windowManager, iniName, mapLoader, true, discordHandler)
         {
             TopBar = topBar;
