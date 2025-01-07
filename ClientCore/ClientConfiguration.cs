@@ -335,6 +335,8 @@ namespace ClientCore
 
         public string CustomMapFolderName => clientDefinitionsIni.GetStringValue(SETTINGS, "CustomMapFolderName", "Custom");
 
+        public string SkillLevelOptions => clientDefinitionsIni.GetStringValue(SETTINGS, "SkillLevelOptions", "Any,Beginner,Intermediate,Pro");
+
         public string GetGameExecutableName()
         {
             string[] exeNames = clientDefinitionsIni.GetStringValue(SETTINGS, "GameExecutableNames", "Game.exe").Split(',');
@@ -424,6 +426,25 @@ namespace ClientCore
         public bool UserDefault_IntegerScaledClient => clientDefinitionsIni.GetBooleanValue(USER_DEFAULTS, "IntegerScaledClient", false);
 
         public bool UserDefault_WriteInstallationPathToRegistry => clientDefinitionsIni.GetBooleanValue(USER_DEFAULTS, "WriteInstallationPathToRegistry", true);
+
+        #endregion
+
+        #region Game networking defaults
+
+        /// <summary>
+        /// Default value for FrameSendRate setting written in spawn.ini.
+        /// </summary>
+        public int DefaultFrameSendRate => clientDefinitionsIni.GetIntValue(SETTINGS, nameof(DefaultFrameSendRate), 7);
+
+        /// <summary>
+        /// Default value for Protocol setting written in spawn.ini.
+        /// </summary>
+        public int DefaultProtocolVersion => clientDefinitionsIni.GetIntValue(SETTINGS, nameof(DefaultProtocolVersion), 2);
+
+        /// <summary>
+        /// Default value for MaxAhead setting written in spawn.ini.
+        /// </summary>
+        public int DefaultMaxAhead => clientDefinitionsIni.GetIntValue(SETTINGS, nameof(DefaultMaxAhead), 0);
 
         #endregion
 
