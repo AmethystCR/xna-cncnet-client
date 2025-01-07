@@ -261,8 +261,8 @@ namespace DTAConfig.OptionPanels
             chkIntegerScaledClient = new XNAClientCheckBox(WindowManager);
             chkIntegerScaledClient.Name = nameof(chkIntegerScaledClient);
             chkIntegerScaledClient.ClientRectangle = new Rectangle(
-                lblClientResolution.X,
-                lblRenderer.Y, 0, 0);
+                ddClientResolution.X,
+                chkCustomIngameResolution.Y, 0, 0);
             chkIntegerScaledClient.Text = "Integer Scaled Client".L10N("Client:DTAConfig:IntegerScaledClient");
             chkIntegerScaledClient.Checked = IniSettings.IntegerScaledClient.Value;
             chkIntegerScaledClient.ToolTipText =
@@ -280,14 +280,14 @@ namespace DTAConfig.OptionPanels
             lblClientTheme.Name = "lblClientTheme";
             lblClientTheme.ClientRectangle = new Rectangle(
                 lblClientResolution.X,
-                chkWindowedMode.Y, 0, 0);
+                lblRenderer.Y, 0, 0);
             lblClientTheme.Text = "Client Theme:".L10N("Client:DTAConfig:ClientTheme");
 
             ddClientTheme = new XNAClientDropDown(WindowManager);
             ddClientTheme.Name = "ddClientTheme";
             ddClientTheme.ClientRectangle = new Rectangle(
                 ddClientResolution.X,
-                chkWindowedMode.Y,
+                ddRenderer.Y,
                 ddClientResolution.Width,
                 ddRenderer.Height);
 
