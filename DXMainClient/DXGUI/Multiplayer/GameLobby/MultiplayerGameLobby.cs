@@ -724,6 +724,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             ddplayerNumbers.Disable();
             ddFilTheater.Disable();
             btnCreateRandomMap.Disable();
+
+            SetMapLabels();
         }
 
         private void ShowMapList()
@@ -762,6 +764,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             ReadINIForControl(lblMapSize);
             ReadINIForControl(btnMapSortAlphabetically);
             ReadINIForControl(lblMapTheater);
+
+            SetMapLabels();
         }
 
         private void MapPreviewBox_LocalStartingLocationSelected(object sender, LocalStartingLocationEventArgs e)
@@ -1160,7 +1164,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             base.ToggleFavoriteMap();
 
-            if (GameModeMap.IsFavorite || !IsHost)
+            if ((GameModeMap != null && GameModeMap.IsFavorite) || !IsHost)
                 return;
 
             RefreshForFavoriteMapRemoved();
