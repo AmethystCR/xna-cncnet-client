@@ -887,8 +887,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 return;
 
             int random = new Random().Next(0, maps.Count);
-            GameModeMap = GameModeMaps.Find(gmm => gmm.GameMode == GameMode && gmm.Map == maps[random]);
-
+            bool isFavoriteMapsSelected = IsFavoriteMapsSelected();
+            GameModeMap = GameModeMaps.Find(gmm => (gmm.GameMode == GameMode || gmm.IsFavorite && isFavoriteMapsSelected) && gmm.Map == maps[random]);
             Logger.Log("PickRandomMap: Rolled " + random + " out of " + maps.Count + ". Picked map: " + Map.Name);
 
             ChangeMap(GameModeMap);
@@ -988,18 +988,16 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         private List<Map> GetMapList(int playerCount)
         {
-            if (playerCount == 1)
-            {
-                List<Map> allMaps = GameMode?.Maps.ToList() ?? new List<Map>();
-                return allMaps;
-            }
+            List<Map> maps = IsFavoriteMapsSelected()
+                ? GetFavoriteGameModeMaps().Select(gmm => gmm.Map).ToList()
+                : GameMode?.Maps.ToList() ?? new List<Map>();
 
             List<Map> mapList = new List<Map>();
-            for (int i = 0; i < GameMode.Maps.Count; i++)
+            for (int i = 0; i < maps.Count; i++)
             {
                 if (tbMapSearch.Text != tbMapSearch.Suggestion)
                 {
-                    if (!GameMode.Maps[i].Name.ToUpper().Contains(tbMapSearch.Text.ToUpper()))
+                    if (!maps[i].Name.ToUpper().Contains(tbMapSearch.Text.ToUpper()))
                     {
                         continue;
                     }
@@ -1007,33 +1005,33 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
                 if (!ddplayerNumbers.SelectedItem.Text.Contains("-"))
                 {
-                    if (GameMode.Maps[i].MaxPlayers != int.Parse(ddplayerNumbers.SelectedItem.Text))
+                    if (maps[i].MaxPlayers != int.Parse(ddplayerNumbers.SelectedItem.Text))
                     {
                         continue;
                     }
                 }
                 else
                 {
-                    if (GameMode.Maps[i].MaxPlayers != playerCount)
+                    if (maps[i].MaxPlayers != playerCount)
                     {
                         continue;
                     }
                 }
                 if (!ddAuthor.SelectedItem.Text.Contains("-"))
                 {
-                    if (!GameMode.Maps[i].Author.Contains(ddAuthor.SelectedItem.Text))
+                    if (!maps[i].Author.Contains(ddAuthor.SelectedItem.Text))
                     {
                         continue;
                     }
                 }
                 if (!ddFilTheater.SelectedItem.Text.Contains("-"))
                 {
-                    if (GameMode.Maps[i].Theater != (string)ddFilTheater.SelectedItem.Tag)
+                    if (maps[i].Theater != (string)ddFilTheater.SelectedItem.Tag)
                     {
                         continue;
                     }
                 }
-                mapList.Add(GameMode.Maps[i]);
+                mapList.Add(maps[i]);
             }
             if (mapList.Count < 1 && playerCount <= MAX_PLAYER_COUNT && ddplayerNumbers.SelectedItem.Text.Contains("-"))
                 return GetMapList(playerCount + 1);
