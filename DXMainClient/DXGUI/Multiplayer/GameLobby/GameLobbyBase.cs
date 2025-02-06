@@ -507,7 +507,15 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             randomMapWindow.Open();
         }
 
-        private void TbMapSearch_InputReceived(object sender, EventArgs e) => ListMaps();
+        private void TbMapSearch_InputReceived(object sender, EventArgs e)
+        {
+            ListMaps();
+
+            if (lbGameModeMapList.SelectedIndex == -1)
+                lbGameModeMapList.SelectedIndex = 0; // Select default GameModeMap
+            else
+                ChangeMap(GameModeMap);
+        }
 
         private void MapScreenActived(object sender, EventArgs e)
         {
@@ -997,7 +1005,11 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             {
                 if (tbMapSearch.Text != tbMapSearch.Suggestion)
                 {
-                    if (!maps[i].Name.ToUpper().Contains(tbMapSearch.Text.ToUpper()))
+                    string promptUpper = tbMapSearch.Text.ToUpperInvariant();
+                    bool mapMatches = maps[i].Name.ToUpperInvariant().Contains(promptUpper)
+                        || maps[i].UntranslatedName.ToUpperInvariant().Contains(promptUpper);
+
+                    if (!mapMatches)
                     {
                         continue;
                     }
