@@ -33,7 +33,7 @@ namespace DTAClient.DXGUI.Generic
             btnExMapEditor.Name = "btnExMapEditor";
             btnExMapEditor.ClientRectangle = new Rectangle(76, 59, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
             btnExMapEditor.Text = "Map Editor".L10N("Client:Main:MapEditor");
-            btnExMapEditor.LeftClick += BtnExMapEditorFA2sp_LeftClick;
+            btnExMapEditor.LeftClick += BtnExMapEditor_LeftClick;
 
             var btnExCredits = new XNAClientButton(WindowManager);
             btnExCredits.Name = "btnExCredits";

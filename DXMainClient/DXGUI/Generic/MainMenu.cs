@@ -1109,7 +1109,7 @@ namespace DTAClient.DXGUI.Generic
                 MusicOff();
         }
 
-        private void BtnMapEditor_LeftClick(object sender, EventArgs e) => LaunchMapEditorFA2sp();
+        private void BtnMapEditor_LeftClick(object sender, EventArgs e) => LaunchMapEditor();
 
         private void BtnStatistics_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.StatisticsWindow);
