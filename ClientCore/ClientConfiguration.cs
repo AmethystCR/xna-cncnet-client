@@ -386,6 +386,11 @@ namespace ClientCore
         public string[] RequiredFiles => clientDefinitionsIni.GetStringValue(SETTINGS, "RequiredFiles", String.Empty).Split(',');
 
         /// <summary>
+        /// List of files that are required to Initialize.
+        /// </summary>
+        public string[] InitializationFiles => clientDefinitionsIni.GetStringValue(SETTINGS, "InitializationFiles", String.Empty).Split(',');
+
+        /// <summary>
         /// List of files that can interfere with the mod functioning.
         /// </summary>
         public string[] ForbiddenFiles => clientDefinitionsIni.GetStringValue(SETTINGS, "ForbiddenFiles", String.Empty).Split(',');

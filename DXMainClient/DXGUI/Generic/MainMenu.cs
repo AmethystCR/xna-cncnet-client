@@ -726,6 +726,48 @@ namespace DTAClient.DXGUI.Generic
         {
             if (UserINISettings.Instance.IsFirstRun)
             {
+                List<string> Initializationfiles = ClientConfiguration.Instance.InitializationFiles.ToList();
+                foreach (var file in Initializationfiles)
+                {
+                    if (SafePath.GetFile(ProgramConstants.GetBaseResourcePath(), "CustomFiles", "Initialization", file).Exists)
+                    {
+                        File.Copy(SafePath.CombineFilePath(ProgramConstants.GetBaseResourcePath(), "CustomFiles", "Initialization", file), SafePath.CombineFilePath(ProgramConstants.GamePath, Path.GetFileName(file)), true);
+                        Logger.Log("Initialize file '" + file + "' succesfully!");
+                    }
+                    else
+                    {
+                        Logger.Log("Initialize file '" + file + "' failed! File does not exist!");
+                    }
+                }
+
+                DirectoryInfo InitCOfolder = SafePath.GetDirectory(ProgramConstants.GamePath, "INI", "Mod Code", "CustomOptions");
+                if (!InitCOfolder.Exists)
+                {
+                    InitCOfolder.Create();
+                    Logger.Log("Create folder 'CustomOptions' succesfully!");
+                }
+                DirectoryInfo InitCOEfolder = SafePath.GetDirectory(ProgramConstants.GamePath, "INI", "Mod Code", "ClientOptionsEnabled");
+                if (!InitCOEfolder.Exists)
+                {
+                    InitCOEfolder.Create();
+                    Logger.Log("Create folder 'ClientOptionsEnabled' succesfully!");
+                }
+
+                string[] filesToCreate =
+                [
+                    "INI/Mod Code/CustomOptions/rulesmd_custom.ini",
+                    "INI/Mod Code/CustomOptions/artmd_custom.ini",
+                ];
+
+                foreach (string filePath in filesToCreate)
+                {
+                    if (!File.Exists(filePath))
+                    {
+                        File.Create(filePath).Close();
+                        Logger.Log("Create file '" + filePath + "' succesfully!");
+                    }
+                }
+
                 UserINISettings.Instance.IsFirstRun.Value = false;
                 UserINISettings.Instance.SaveSettings();
 
