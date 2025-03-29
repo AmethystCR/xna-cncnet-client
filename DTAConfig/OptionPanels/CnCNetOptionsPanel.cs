@@ -218,7 +218,7 @@ namespace DTAConfig.OptionPanels
 
             gameListPanel.AddChild(lblFollowedGames);
 
-            var OptionsIni = new IniFile(SafePath.CombineFilePath(ProgramConstants.GetResourcePath(), "OptionsWindow.ini"));
+            var OptionsIni = new IniFile(SafePath.CombineFilePath(ProgramConstants.GetBaseResourcePath(), "OptionsWindow.ini"));
 
             // Max number of games per column
             int maxGamesPerColumn = OptionsIni.GetIntValue("OptionsWindow", "maxGamesPerColumn", 4);
