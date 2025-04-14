@@ -507,25 +507,9 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             randomMapWindow.Open();
         }
 
-        private void TbMapSearch_InputReceived(object sender, EventArgs e)
-        {
-            ListMaps();
+        private void TbMapSearch_InputReceived(object sender, EventArgs e) => ListMaps();
 
-            if (lbGameModeMapList.SelectedIndex == -1)
-                lbGameModeMapList.SelectedIndex = 0; // Select default GameModeMap
-            else
-                ChangeMap(GameModeMap);
-        }
-
-        private void MapScreenActived(object sender, EventArgs e)
-        {
-            ListMaps();
-
-            if (lbGameModeMapList.SelectedIndex == -1)
-                lbGameModeMapList.SelectedIndex = 0; // Select default GameModeMap
-            else
-                ChangeMap(GameModeMap);
-        }
+        private void MapScreenActived(object sender, EventArgs e) => ListMaps();
 
         private void Dropdown_SelectedIndexChanged(object sender, EventArgs e)
         {
