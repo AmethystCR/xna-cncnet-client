@@ -87,6 +87,10 @@ namespace ClientCore
 
             ChatColor = new IntSetting(iniFile, MULTIPLAYER, "ChatColor", -1);
             LANChatColor = new IntSetting(iniFile, MULTIPLAYER, "LANChatColor", -1);
+            UTColorOne = new IntSetting(iniFile, MULTIPLAYER, "UTColorOne", 13);
+            UTColorTwo = new IntSetting(iniFile, MULTIPLAYER, "UTColorTwo", 11);
+            UTColorThree = new IntSetting(iniFile, MULTIPLAYER, "UTColorThree", 7);
+            UTColorFour = new IntSetting(iniFile, MULTIPLAYER, "UTColorFour", 15);
             PingUnofficialCnCNetTunnels = new BoolSetting(iniFile, MULTIPLAYER, "PingCustomTunnels", true);
             WritePathToRegistry = new BoolSetting(iniFile, OPTIONS, "WriteInstallationPathToRegistry", ClientConfiguration.Instance.UserDefault_WriteInstallationPathToRegistry);
             PlaySoundOnGameHosted = new BoolSetting(iniFile, MULTIPLAYER, "PlaySoundOnGameHosted", true);
@@ -190,6 +194,12 @@ namespace ClientCore
 
         public IntSetting ChatColor { get; private set; }
         public IntSetting LANChatColor { get; private set; }
+
+        public IntSetting UTColorOne { get; private set; }
+        public IntSetting UTColorTwo { get; private set; }
+        public IntSetting UTColorThree { get; private set; }
+        public IntSetting UTColorFour { get; private set; }
+
         public BoolSetting PingUnofficialCnCNetTunnels { get; private set; }
         public BoolSetting WritePathToRegistry { get; private set; }
         public BoolSetting PlaySoundOnGameHosted { get; private set; }

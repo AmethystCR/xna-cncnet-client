@@ -44,6 +44,8 @@ namespace DTAConfig.OptionPanels
 
         private HotkeyConfigurationWindow hotkeyConfigWindow;
 
+        private ColorConfigurationWindow colorConfigWindow;
+
         public override void Initialize()
         {
             base.Initialize();
@@ -162,11 +164,21 @@ namespace DTAConfig.OptionPanels
             DarkeningPanel.AddAndInitializeWithControl(WindowManager, hotkeyConfigWindow);
             hotkeyConfigWindow.Disable();
 
+            colorConfigWindow = new ColorConfigurationWindow(WindowManager);
+            DarkeningPanel.AddAndInitializeWithControl(WindowManager, colorConfigWindow);
+            colorConfigWindow.Disable();
+
             var btnConfigureHotkeys = new XNAClientButton(WindowManager);
             btnConfigureHotkeys.Name = "btnConfigureHotkeys";
             btnConfigureHotkeys.ClientRectangle = new Rectangle(lblPlayerName.X, lblNotice.Bottom + 36, UIDesignConstants.BUTTON_WIDTH_160, UIDesignConstants.BUTTON_HEIGHT);
             btnConfigureHotkeys.Text = "Configure Hotkeys".L10N("Client:DTAConfig:ConfigureHotkeys");
             btnConfigureHotkeys.LeftClick += BtnConfigureHotkeys_LeftClick;
+
+            var btnConfigureColors = new XNAClientButton(WindowManager);
+            btnConfigureColors.Name = "btnConfigureColors";
+            btnConfigureColors.ClientRectangle = new Rectangle(lblPlayerName.X, btnConfigureHotkeys.Bottom + 36, UIDesignConstants.BUTTON_WIDTH_160, UIDesignConstants.BUTTON_HEIGHT);
+            btnConfigureColors.Text = "Unified Techno Color".L10N("Client:DTAConfig:UTColorSetting");
+            btnConfigureColors.LeftClick += BtnConfigureColors_LeftClick;
 
             AddChild(lblScrollRate);
             AddChild(lblScrollRateValue);
@@ -178,6 +190,7 @@ namespace DTAConfig.OptionPanels
             AddChild(tbPlayerName);
             AddChild(lblNotice);
             AddChild(btnConfigureHotkeys);
+            AddChild(btnConfigureColors);
         }
 
         private void BtnConfigureHotkeys_LeftClick(object sender, EventArgs e)
@@ -194,6 +207,23 @@ namespace DTAConfig.OptionPanels
         private void HotkeyConfigWindow_EnabledChanged(object sender, EventArgs e)
         {
             hotkeyConfigWindow.EnabledChanged -= HotkeyConfigWindow_EnabledChanged;
+            topBar.Enable();
+        }
+
+        private void BtnConfigureColors_LeftClick(object sender, EventArgs e)
+        {
+            colorConfigWindow.Enable();
+
+            if (topBar.Enabled)
+            {
+                topBar.Disable();
+                colorConfigWindow.EnabledChanged += ColorConfigWindow_EnabledChanged;
+            }
+        }
+
+        private void ColorConfigWindow_EnabledChanged(object sender, EventArgs e)
+        {
+            colorConfigWindow.EnabledChanged -= ColorConfigWindow_EnabledChanged;
             topBar.Enable();
         }
 
