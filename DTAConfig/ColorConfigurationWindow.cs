@@ -89,7 +89,7 @@ namespace DTAConfig
                 XNADropDownItem item = new()
                 {
                     Text = UTColor.Name.L10N($"INI:Colors:{UTColor.Name}"),
-                    Tag = UTColor.Name,
+                    Tag = UTColor,
                     TextColor = UTColor.XnaColor,
                 };
                 ddColorsOne.AddItem(item);
@@ -167,16 +167,37 @@ namespace DTAConfig
         private void SetUTColors()
         {
             UserINISettings.Instance.UTColorOne.Value = ddColorsOne.SelectedIndex;
-            UTColorsINI.SetStringValue("AudioVisual", "UnifiedTechnoColor.Self", (string)ddColorsOne.SelectedItem.Tag);
-
             UserINISettings.Instance.UTColorTwo.Value = ddColorsTwo.SelectedIndex;
-            UTColorsINI.SetStringValue("AudioVisual", "UnifiedTechnoColor.Ally", (string)ddColorsTwo.SelectedItem.Tag);
-
             UserINISettings.Instance.UTColorThree.Value = ddColorsThree.SelectedIndex;
-            UTColorsINI.SetStringValue("AudioVisual", "UnifiedTechnoColor.Enemy", (string)ddColorsThree.SelectedItem.Tag);
-
             UserINISettings.Instance.UTColorFour.Value = ddColorsFour.SelectedIndex;
-            UTColorsINI.SetStringValue("AudioVisual", "UnifiedTechnoColor.Neutral", (string)ddColorsFour.SelectedItem.Tag);
+
+            if (ddColorsOne.SelectedItem?.Tag is UnifiedTechnoColor color1)
+            {
+                string rgbvalue1 = $"{color1.XnaColor.R},{color1.XnaColor.G},{color1.XnaColor.B}";
+                UTColorsINI.SetStringValue("AudioVisual", "UnifiedRadarColor.Self", rgbvalue1);
+                UTColorsINI.SetStringValue("AudioVisual", "UnifiedTechnoColor.Self", (string)color1.Name);
+            }
+
+            if (ddColorsTwo.SelectedItem?.Tag is UnifiedTechnoColor color2)
+            {
+                string rgbvalue2 = $"{color2.XnaColor.R},{color2.XnaColor.G},{color2.XnaColor.B}";
+                UTColorsINI.SetStringValue("AudioVisual", "UnifiedRadarColor.Ally", rgbvalue2);
+                UTColorsINI.SetStringValue("AudioVisual", "UnifiedTechnoColor.Ally", (string)color2.Name);
+            }
+
+            if (ddColorsThree.SelectedItem?.Tag is UnifiedTechnoColor color3)
+            {
+                string rgbvalue3 = $"{color3.XnaColor.R},{color3.XnaColor.G},{color3.XnaColor.B}";
+                UTColorsINI.SetStringValue("AudioVisual", "UnifiedRadarColor.Enemy", rgbvalue3);
+                UTColorsINI.SetStringValue("AudioVisual", "UnifiedTechnoColor.Enemy", (string)color3.Name);
+            }
+
+            if (ddColorsFour.SelectedItem?.Tag is UnifiedTechnoColor color4)
+            {
+                string rgbvalue4 = $"{color4.XnaColor.R},{color4.XnaColor.G},{color4.XnaColor.B}";
+                UTColorsINI.SetStringValue("AudioVisual", "UnifiedRadarColor.Neutral", rgbvalue4);
+                UTColorsINI.SetStringValue("AudioVisual", "UnifiedTechnoColor.Neutral", (string)color4.Name);
+            }
         }
 
         private void BtnSave_LeftClick(object sender, EventArgs e)

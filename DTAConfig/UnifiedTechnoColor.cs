@@ -48,14 +48,14 @@ namespace DTAConfig
 
             List<UnifiedTechnoColor> utColors = new List<UnifiedTechnoColor>();
 
-            List<string> colorKeys = gameOptionsIni.GetSectionKeys("MPColors");
+            List<string> colorKeys = gameOptionsIni.GetSectionKeys("UTColors");
 
             if (colorKeys == null)
-                throw new ClientConfigurationException("[MPColors] not found in GameOptions.ini!");
+                throw new ClientConfigurationException("[UTColors] not found in GameOptions.ini!");
 
             foreach (string key in colorKeys)
             {
-                string[] values = gameOptionsIni.GetStringValue("MPColors", key, "255,255,255,0").Split(',');
+                string[] values = gameOptionsIni.GetStringValue("UTColors", key, "255,255,255,0").Split(',');
 
                 try
                 {
