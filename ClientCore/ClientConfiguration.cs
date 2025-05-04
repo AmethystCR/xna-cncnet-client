@@ -224,6 +224,8 @@ namespace ClientCore
 
         public string MapEditorExePath => SafePath.CombineFilePath(clientDefinitionsIni.GetStringValue(SETTINGS, "MapEditorExePath", SafePath.CombineFilePath("FinalSun", "FinalSun.exe")));
 
+        public string GameManualPath => SafePath.CombineFilePath(clientDefinitionsIni.GetStringValue(SETTINGS, "GameManualPath", SafePath.CombineFilePath(ProgramConstants.GetBaseResourcePath(), "GameManual", "Index.html")));
+
         public string UnixMapEditorExePath => clientDefinitionsIni.GetStringValue(SETTINGS, "UnixMapEditorExePath", Instance.MapEditorExePath);
 
         public bool ModMode => clientDefinitionsIni.GetBooleanValue(SETTINGS, "ModMode", false);

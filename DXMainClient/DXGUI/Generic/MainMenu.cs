@@ -1160,7 +1160,7 @@ namespace DTAClient.DXGUI.Generic
             innerPanel.Show(innerPanel.CreditsWindow);
 
         private void BtnDatabase_LeftClick(object sender, EventArgs e) =>
-            innerPanel.Show(innerPanel.DatabaseWindow);
+            ProcessLauncher.StartShellProcess(ClientConfiguration.Instance.GameManualPath);
 
         private void BtnExtras_LeftClick(object sender, EventArgs e) =>
             innerPanel.Show(innerPanel.ExtrasWindow);

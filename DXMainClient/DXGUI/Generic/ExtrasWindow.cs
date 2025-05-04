@@ -116,11 +116,8 @@ namespace DTAClient.DXGUI.Generic
             parent.Show(parent.CreditsWindow);
         }
 
-        private void BtnExDatabase_LeftClick(object sender, EventArgs e)
-        {
-            MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
-            parent.Show(parent.DatabaseWindow);
-        }
+        private void BtnExDatabase_LeftClick(object sender, EventArgs e) =>
+            ProcessLauncher.StartShellProcess(ClientConfiguration.Instance.GameManualPath);
 
         private void BtnExCancel_LeftClick(object sender, EventArgs e)
         {
