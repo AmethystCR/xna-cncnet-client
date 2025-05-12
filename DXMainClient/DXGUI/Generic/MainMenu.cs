@@ -59,6 +59,7 @@ namespace DTAClient.DXGUI.Generic
             UpdateQueryWindow updateQueryWindow,
             ManualUpdateQueryWindow manualUpdateQueryWindow,
             UpdateWindow updateWindow,
+            CreditsWindow creditsWindow,
             ExtrasWindow extrasWindow
         ) : base(windowManager)
         {
@@ -81,6 +82,7 @@ namespace DTAClient.DXGUI.Generic
             this.updateQueryWindow = updateQueryWindow;
             this.manualUpdateQueryWindow = manualUpdateQueryWindow;
             this.updateWindow = updateWindow;
+            this.creditsWindow = creditsWindow;
             this.extrasWindow = extrasWindow;
 
             this.cncnetLobby.UpdateCheck += CncnetLobby_UpdateCheck;
@@ -120,6 +122,7 @@ namespace DTAClient.DXGUI.Generic
         private readonly UpdateQueryWindow updateQueryWindow;
         private readonly ManualUpdateQueryWindow manualUpdateQueryWindow;
         private readonly UpdateWindow updateWindow;
+        private readonly CreditsWindow creditsWindow;
         private readonly ExtrasWindow extrasWindow;
 
         private XNAMessageBox firstRunMessageBox;
@@ -884,6 +887,7 @@ namespace DTAClient.DXGUI.Generic
                 updateQueryWindow,
                 manualUpdateQueryWindow,
                 updateWindow,
+                creditsWindow,
                 extrasWindow,
             })
                 DarkeningPanel.AddAndInitializeWithControl(WindowManager, control);
@@ -913,6 +917,7 @@ namespace DTAClient.DXGUI.Generic
                 updateQueryWindow,
                 manualUpdateQueryWindow,
                 updateWindow,
+                creditsWindow,
                 extrasWindow,
             })
                 control.Disable();
@@ -1216,7 +1221,7 @@ namespace DTAClient.DXGUI.Generic
             statisticsWindow.Enable();
 
         private void BtnCredits_LeftClick(object sender, EventArgs e) =>
-            innerPanel.Show(innerPanel.CreditsWindow);
+            creditsWindow.Enable();
 
         private void BtnDatabase_LeftClick(object sender, EventArgs e) =>
             ProcessLauncher.StartShellProcess(ClientConfiguration.Instance.GameManualPath);

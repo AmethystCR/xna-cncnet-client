@@ -14,9 +14,12 @@ namespace DTAClient.DXGUI.Generic
     {
         private StatisticsWindow statisticsWindow;
 
-        public ExtrasWindow(WindowManager windowManager, StatisticsWindow statisticsWindow) : base(windowManager)
+        private CreditsWindow creditsWindow;
+
+        public ExtrasWindow(WindowManager windowManager, StatisticsWindow statisticsWindow, CreditsWindow creditsWindow) : base(windowManager)
         {
             this.statisticsWindow = statisticsWindow;
+            this.creditsWindow = creditsWindow;
         }
 
         public override void Initialize()
@@ -114,8 +117,8 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnExCredits_LeftClick(object sender, EventArgs e)
         {
-            MainMenuDarkeningPanel parent = (MainMenuDarkeningPanel)Parent;
-            parent.Show(parent.CreditsWindow);
+            Disable();
+            creditsWindow.Enable();
         }
 
         private void BtnExDatabase_LeftClick(object sender, EventArgs e) =>
