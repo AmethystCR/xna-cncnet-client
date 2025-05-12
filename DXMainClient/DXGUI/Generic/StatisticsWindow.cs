@@ -104,6 +104,8 @@ namespace DTAClient.DXGUI.Generic
 
         protected IniFile StatisticsWindowIni { get; private set; }
 
+        private bool initialized = false;
+
         public override void Initialize()
         {
             sm = StatisticsManager.Instance;
@@ -127,6 +129,7 @@ namespace DTAClient.DXGUI.Generic
             Name = "StatisticsWindow";
             BackgroundTexture = AssetLoader.LoadTexture("scoreviewerbg.png");
             ClientRectangle = new Rectangle(0, 0, 700, 521);
+            VisibleChanged += StatisticsWindow_VisibleChanged;
 
             tabControl = new XNAClientTabControl(WindowManager);
             tabControl.Name = "tabControl";
@@ -597,7 +600,6 @@ namespace DTAClient.DXGUI.Generic
 
             ReadStatistics();
             ListGameModes();
-            ListGames();
 
             StatisticsManager.Instance.GameAdded += Instance_GameAdded;
 
@@ -632,6 +634,13 @@ namespace DTAClient.DXGUI.Generic
             locationY += totalstatsyincrease;
             AddAchBtn("PrgBtValue", "Know the trees".L10N("Client:Main:BtTitle"), "I know how many trees there are in the BT-maps: play (big)BT-maps 20 times".L10N("Client:Main:BtText"), new Point(totalstatslocationx2, locationY),14);
             locationY += totalstatsyincrease;
+
+            initialized = true;
+        }
+
+        private void StatisticsWindow_VisibleChanged(object sender, EventArgs e)
+        {
+            ListGames();
         }
 
         private void Instance_GameAdded(object sender, EventArgs e)
@@ -862,6 +871,9 @@ namespace DTAClient.DXGUI.Generic
 
         private void ListGames()
         {
+            if (!Visible || !initialized)
+                return;
+
             lbGameList.SelectedIndex = -1;
             lbGameList.SetTopIndex(0);
 
@@ -1348,9 +1360,7 @@ namespace DTAClient.DXGUI.Generic
 
         private void BtnReturnToMenu_LeftClick(object sender, EventArgs e)
         {
-            // To hide the control, just set Enabled=false
-            // and MainMenuDarkeningPanel will deal with the rest
-            Enabled = false;
+            Disable();
         }
 
         private void BtnClearStatistics_LeftClick(object sender, EventArgs e)

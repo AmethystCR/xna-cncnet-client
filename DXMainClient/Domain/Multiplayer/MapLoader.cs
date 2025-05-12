@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -99,7 +100,7 @@ namespace DTAClient.Domain.Multiplayer
             {
                 string mapFilePathValue = mpMapsIni.GetStringValue(MultiMapsSection, key, string.Empty);
                 string mapFilePath = SafePath.CombineFilePath(mapFilePathValue);
-                FileInfo mapFile = SafePath.GetFile(ProgramConstants.GamePath, FormattableString.Invariant($"{mapFilePath}{MAP_FILE_EXTENSION}"));
+                FileInfo mapFile = SafePath.GetFile(ProgramConstants.GamePath, FormattableString.Invariant($"{mapFilePath}.{ClientConfiguration.Instance.MapFileExtension}"));
 
                 if (!mapFile.Exists)
                 {
@@ -163,7 +164,7 @@ namespace DTAClient.Domain.Multiplayer
                 return;
             }
 
-            IEnumerable<FileInfo> mapFiles = customMapsDirectory.EnumerateFiles($"*{MAP_FILE_EXTENSION}");
+            IEnumerable<FileInfo> mapFiles = customMapsDirectory.EnumerateFiles($"*.{ClientConfiguration.Instance.MapFileExtension}");
             ConcurrentDictionary<string, Map> customMapCache = LoadCustomMapCache();
             var localMapSHAs = new ConcurrentBag<string>();
 
@@ -254,7 +255,9 @@ namespace DTAClient.Domain.Multiplayer
         /// <returns>The map if loading it was successful, otherwise false.</returns>
         public Map LoadCustomMap(string mapPath, out string resultMessage)
         {
-            string customMapFilePath = SafePath.CombineFilePath(ProgramConstants.GamePath, FormattableString.Invariant($"{mapPath}{MAP_FILE_EXTENSION}"));
+            Debug.Assert(!mapPath.EndsWith(ClientConfiguration.Instance.MapFileExtension, StringComparison.InvariantCultureIgnoreCase), $"Unexpected map path {mapPath}. It should not end with the map extension.");
+
+            string customMapFilePath = SafePath.CombineFilePath(ProgramConstants.GamePath, FormattableString.Invariant($"{mapPath}{ClientConfiguration.Instance.MapFileExtension}"));
             FileInfo customMapFile = SafePath.GetFile(customMapFilePath);
 
             if (!customMapFile.Exists)
