@@ -15,7 +15,6 @@ namespace DTAClient.Domain.Multiplayer
 {
     public class MapLoader
     {
-        public const string MAP_FILE_EXTENSION = ".map";
         private string CUSTOM_MAPS_DIRECTORY = $"Maps\\{ClientConfiguration.Instance.CustomMapFolderName}";
         private static readonly string CUSTOM_MAPS_CACHE = SafePath.CombineFilePath(ProgramConstants.ClientUserFilesPath, "custom_map_cache");
         private const string MultiMapsSection = "MultiMaps";
