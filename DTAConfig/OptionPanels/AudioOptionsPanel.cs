@@ -174,7 +174,7 @@ namespace DTAConfig.OptionPanels
             chkStopMusicOnMenu.Name = nameof(chkStopMusicOnMenu);
             chkStopMusicOnMenu.Text = "Don't play main menu music in lobbies".L10N("Client:DTAConfig:NoLobbiesMusic");
             chkStopMusicOnMenu.ClientRectangle = new Rectangle(
-                lblScoreVolume.X, chkMainMenuMusic.ClientRectangle.Bottom + CHECKBOX_SPACING, 0, 0);
+                lblScoreVolume.X, chkMainMenuMusic.Bottom + CHECKBOX_SPACING, 0, 0);
             AddChild(chkStopMusicOnMenu);
 
             chkStopGameLobbyMessageAudio = new XNAClientCheckBox(WindowManager);
