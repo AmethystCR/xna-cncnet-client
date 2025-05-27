@@ -19,6 +19,8 @@ namespace DTAClient.DXGUI.Generic
         private const int DEFAULT_WIDTH = 650;
         private const int DEFAULT_HEIGHT = 600;
 
+        private const int INTERVAL_SCALE = 1800;
+
         private static string[] DifficultyNames = new string[] { "Easy", "Medium", "Hard" };
 
         private static string[] DifficultyIniPaths = new string[]
@@ -40,6 +42,10 @@ namespace DTAClient.DXGUI.Generic
         private XNAClientButton btnLaunch;
         private XNATextBlock tbMissionDescription;
         private XNATrackbar trbDifficultySelector;
+        private XNATrackbar trbAutoSaveInterval;
+
+        private XNALabel lblDifficultyLevelValue;
+        private XNALabel lblAutoSaveIntervalValue;
 
         private CheaterWindow cheaterWindow;
 
@@ -93,7 +99,7 @@ namespace DTAClient.DXGUI.Generic
             tbMissionDescription.ClientRectangle = new Rectangle(
                 lblMissionDescriptionHeader.X,
                 lblMissionDescriptionHeader.Bottom + 6,
-                Width - 24 - lbCampaignList.Right, 430);
+                Width - 24 - lbCampaignList.Right, 350);
             tbMissionDescription.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
             tbMissionDescription.Alpha = 1.0f;
 
@@ -106,8 +112,7 @@ namespace DTAClient.DXGUI.Generic
             lblDifficultyLevel.FontIndex = 1;
             Vector2 textSize = Renderer.GetTextDimensions(lblDifficultyLevel.Text, lblDifficultyLevel.FontIndex);
             lblDifficultyLevel.ClientRectangle = new Rectangle(
-                tbMissionDescription.X + (tbMissionDescription.Width - (int)textSize.X) / 2,
-                tbMissionDescription.Bottom + 12, (int)textSize.X, (int)textSize.Y);
+                tbMissionDescription.X, tbMissionDescription.Bottom + 12, (int)textSize.X, (int)textSize.Y);
 
             trbDifficultySelector = new XNATrackbar(WindowManager);
             trbDifficultySelector.Name = nameof(trbDifficultySelector);
@@ -120,6 +125,14 @@ namespace DTAClient.DXGUI.Generic
                 new Color(0, 0, 0, 128), 2, 2);
             trbDifficultySelector.ButtonTexture = AssetLoader.LoadTextureUncached(
                 "trackbarButton_difficulty.png");
+            trbDifficultySelector.ValueChanged += TrbDifficultySelector_ValueChanged;
+
+            lblDifficultyLevelValue = new XNALabel(WindowManager);
+            lblDifficultyLevelValue.Name = nameof(lblDifficultyLevelValue);
+            lblDifficultyLevelValue.FontIndex = 1;
+            lblDifficultyLevelValue.Text = "NULL";
+            lblDifficultyLevelValue.ClientRectangle = new Rectangle(tbMissionDescription.Right - lblDifficultyLevelValue.Width, 
+                lblDifficultyLevel.Y, 1, 1);
 
             var lblEasy = new XNALabel(WindowManager);
             lblEasy.Name = nameof(lblEasy);
@@ -144,6 +157,28 @@ namespace DTAClient.DXGUI.Generic
             lblHard.ClientRectangle = new Rectangle(
                 tbMissionDescription.Right - lblHard.Width,
                 lblEasy.Y, 1, 1);
+
+            var lblAutoSaveInterval = new XNALabel(WindowManager);
+            lblAutoSaveInterval.Name = nameof(lblAutoSaveInterval);
+            lblAutoSaveInterval.Text = "AUTOSAVE INTERVAL".L10N("Client:Main:AutoSaveInterval");
+            lblAutoSaveInterval.FontIndex = 1;
+            lblAutoSaveInterval.ClientRectangle = new Rectangle(tbMissionDescription.X, trbDifficultySelector.Bottom + 50, 1, 1);
+
+            trbAutoSaveInterval = new XNATrackbar(WindowManager);
+            trbAutoSaveInterval.Name = nameof(trbAutoSaveInterval);
+            trbAutoSaveInterval.ClientRectangle = new Rectangle(tbMissionDescription.X, lbCampaignList.Bottom - 30, tbMissionDescription.Width, 30);
+            trbAutoSaveInterval.MinValue = 1;
+            trbAutoSaveInterval.MaxValue = 10;
+            trbAutoSaveInterval.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 2, 2);
+            trbAutoSaveInterval.ButtonTexture = AssetLoader.LoadTextureUncached("trackbarButton.png");
+            trbAutoSaveInterval.ValueChanged += TrbAutoSaveInterval_ValueChanged;
+
+            lblAutoSaveIntervalValue = new XNALabel(WindowManager);
+            lblAutoSaveIntervalValue.Name = nameof(lblAutoSaveIntervalValue);
+            lblAutoSaveIntervalValue.FontIndex = 1;
+            lblAutoSaveIntervalValue.Text = "NULL";
+            lblAutoSaveIntervalValue.ClientRectangle = new Rectangle(tbMissionDescription.Right - lblAutoSaveIntervalValue.Width, 
+                lblAutoSaveInterval.Y, 1, 1);
 
             btnLaunch = new XNAClientButton(WindowManager);
             btnLaunch.Name = nameof(btnLaunch);
@@ -170,6 +205,10 @@ namespace DTAClient.DXGUI.Generic
             AddChild(lblEasy);
             AddChild(lblNormal);
             AddChild(lblHard);
+            AddChild(lblDifficultyLevelValue);
+            AddChild(lblAutoSaveInterval);
+            AddChild(trbAutoSaveInterval);
+            AddChild(lblAutoSaveIntervalValue);
 
             // Set control attributes from INI file
             base.Initialize();
@@ -178,6 +217,7 @@ namespace DTAClient.DXGUI.Generic
             CenterOnParent();
 
             trbDifficultySelector.Value = UserINISettings.Instance.Difficulty;
+            trbAutoSaveInterval.Value = UserINISettings.Instance.AutoSaveInterval;
 
             ReadMissionList();
 
@@ -189,6 +229,20 @@ namespace DTAClient.DXGUI.Generic
             cheaterWindow.CenterOnParent();
             cheaterWindow.YesClicked += CheaterWindow_YesClicked;
             cheaterWindow.Disable();
+        }
+
+        private void TrbDifficultySelector_ValueChanged(object sender, EventArgs e)
+        {
+            if (trbDifficultySelector.Value == 0)
+                lblDifficultyLevelValue.Text = "EASY".L10N("Client:Main:DifficultyEasy");
+            else if (trbDifficultySelector.Value == 1)
+                lblDifficultyLevelValue.Text = "NORMAL".L10N("Client:Main:DifficultyNormal");
+            else
+                lblDifficultyLevelValue.Text = "HARD".L10N("Client:Main:DifficultyHard");
+        }
+        private void TrbAutoSaveInterval_ValueChanged(object sender, EventArgs e)
+        {
+            lblAutoSaveIntervalValue.Text = (trbAutoSaveInterval.Value * INTERVAL_SCALE).ToString();
         }
 
         private void LbCampaignList_SelectedIndexChanged(object sender, EventArgs e)
@@ -300,6 +354,8 @@ namespace DTAClient.DXGUI.Generic
                 spawnStreamWriter.WriteLine("BuildOffAlly=" + mission.BuildOffAlly);
 
                 UserINISettings.Instance.Difficulty.Value = trbDifficultySelector.Value;
+                UserINISettings.Instance.AutoSaveInterval.Value = trbAutoSaveInterval.Value;
+                spawnStreamWriter.WriteLine("AutoSaveInterval=" + (int)(UserINISettings.Instance.AutoSaveInterval.Value * INTERVAL_SCALE));
 
                 spawnStreamWriter.WriteLine("DifficultyModeHuman=" + (mission.PlayerAlwaysOnNormalDifficulty ? "1" : trbDifficultySelector.Value.ToString()));
                 spawnStreamWriter.WriteLine("DifficultyModeComputer=" + GetComputerDifficulty());
@@ -320,6 +376,7 @@ namespace DTAClient.DXGUI.Generic
             }
 
             UserINISettings.Instance.Difficulty.Value = trbDifficultySelector.Value;
+            UserINISettings.Instance.AutoSaveInterval.Value = trbAutoSaveInterval.Value;
             UserINISettings.Instance.SaveSettings();
 
             Disable();
