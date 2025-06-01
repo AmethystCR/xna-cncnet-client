@@ -20,13 +20,16 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
     {
         private const string SETTINGS_PATH = "Client/SkirmishSettings.ini";
 
-        public SkirmishLobby(WindowManager windowManager, TopBar topBar, MapLoader mapLoader, DiscordHandler discordHandler)
-            : base(windowManager, "SkirmishLobby", mapLoader, false, discordHandler)
+        public SkirmishLobby(WindowManager windowManager, TopBar topBar, MapLoader mapLoader, DiscordHandler discordHandler, Random random)
+            : base(windowManager, "SkirmishLobby", mapLoader, false, discordHandler, random)
         {
             this.topBar = topBar;
+            this.random = random;
         }
 
         public event EventHandler Exited;
+
+        private Random random;
 
         TopBar topBar;
 
@@ -34,7 +37,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             base.Initialize();
 
-            RandomSeed = new Random().Next();
+            RandomSeed = random.Next();
 
             //InitPlayerOptionDropdowns(128, 98, 90, 48, 55, new Point(6, 24));
             InitPlayerOptionDropdowns();
@@ -249,7 +252,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             DdGameModeMapFilter_SelectedIndexChanged(null, EventArgs.Empty); // Refresh ranks
 
-            RandomSeed = new Random().Next();
+            RandomSeed = random.Next();
         }
 
         public void Open()

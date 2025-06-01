@@ -56,16 +56,20 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             string iniName,
             MapLoader mapLoader,
             bool isMultiplayer,
-            DiscordHandler discordHandler
+            DiscordHandler discordHandler,
+            Random random
         ) : base(windowManager)
         {
             _iniSectionName = iniName;
             MapLoader = mapLoader;
             this.isMultiplayer = isMultiplayer;
             this.discordHandler = discordHandler;
+            this.random = random;
         }
 
         private string _iniSectionName;
+
+        private Random random;
 
         protected XNAPanel PlayerOptionsPanel;
 
@@ -891,10 +895,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             if (maps.Count < 1)
                 return;
 
-            int random = new Random().Next(0, maps.Count);
+            int randomValue = random.Next(0, maps.Count);
             bool isFavoriteMapsSelected = IsFavoriteMapsSelected();
-            GameModeMap = GameModeMaps.Find(gmm => (gmm.GameMode == GameMode || gmm.IsFavorite && isFavoriteMapsSelected) && gmm.Map == maps[random]);
-            Logger.Log("PickRandomMap: Rolled " + random + " out of " + maps.Count + ". Picked map: " + Map.Name);
+            GameModeMap = GameModeMaps.Find(gmm => (gmm.GameMode == GameMode || gmm.IsFavorite && isFavoriteMapsSelected) && gmm.Map == maps[randomValue]);
+            Logger.Log("PickRandomMap: Rolled " + randomValue + " out of " + maps.Count + ". Picked map: " + Map.Name);
 
             ChangeMap(GameModeMap);
             //tbMapSearch.Text = string.Empty;
@@ -1607,7 +1611,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             // Randomize options
 
-            Random random = new Random(RandomSeed);
+            Random pseudoRandom = new Random(RandomSeed);
 
             for (int i = 0; i < totalPlayerCount; i++)
             {
@@ -1626,10 +1630,10 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                     disallowedSides = GetDisallowedSidesForGroup(forHumanPlayers:false);
                 }
 
-                pHouseInfo.RandomizeSide(pInfo, SideCount, random, disallowedSides, RandomSelectors, RandomSelectorCount);
+                pHouseInfo.RandomizeSide(pInfo, SideCount, pseudoRandom, disallowedSides, RandomSelectors, RandomSelectorCount);
 
-                pHouseInfo.RandomizeColor(pInfo, freeColors, MPColors, random);
-                pHouseInfo.RandomizeStart(pInfo, random, freeStartingLocations, takenStartingLocations, teamStartMappings.Any());
+                pHouseInfo.RandomizeColor(pInfo, freeColors, MPColors, pseudoRandom);
+                pHouseInfo.RandomizeStart(pInfo, pseudoRandom, freeStartingLocations, takenStartingLocations, teamStartMappings.Any());
             }
 
             return houseInfos;
