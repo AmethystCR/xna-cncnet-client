@@ -160,14 +160,14 @@ namespace DTAClient.DXGUI.Generic
 
             var lblAutoSaveInterval = new XNALabel(WindowManager);
             lblAutoSaveInterval.Name = nameof(lblAutoSaveInterval);
-            lblAutoSaveInterval.Text = "AUTOSAVE INTERVAL".L10N("Client:Main:AutoSaveInterval");
+            lblAutoSaveInterval.Text = "AUTOSAVE INTERVAL (0 For Disable)".L10N("Client:Main:AutoSaveInterval");
             lblAutoSaveInterval.FontIndex = 1;
             lblAutoSaveInterval.ClientRectangle = new Rectangle(tbMissionDescription.X, trbDifficultySelector.Bottom + 50, 1, 1);
 
             trbAutoSaveInterval = new XNATrackbar(WindowManager);
             trbAutoSaveInterval.Name = nameof(trbAutoSaveInterval);
             trbAutoSaveInterval.ClientRectangle = new Rectangle(tbMissionDescription.X, lbCampaignList.Bottom - 30, tbMissionDescription.Width, 30);
-            trbAutoSaveInterval.MinValue = 1;
+            trbAutoSaveInterval.MinValue = 0;
             trbAutoSaveInterval.MaxValue = 10;
             trbAutoSaveInterval.BackgroundTexture = AssetLoader.CreateTexture(new Color(0, 0, 0, 128), 2, 2);
             trbAutoSaveInterval.ButtonTexture = AssetLoader.LoadTextureUncached("trackbarButton.png");
