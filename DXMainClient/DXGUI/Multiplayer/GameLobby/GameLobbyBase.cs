@@ -642,6 +642,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             lbGameModeMapList.SelectedIndex = -1;
 
             int mapIndex = -1;
+            int skippedMapsCount = 0;
 
             var isFavoriteMapsSelected = IsFavoriteMapsSelected();
             var maps = GetSortedGameModeMaps();
@@ -745,13 +746,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 // Preserve the selected map
                 if (gameModeMap == GameModeMap)
                 {
-                    mapIndex = i;
+                    mapIndex = i - skippedMapsCount;
                     gameModeMapChanged = false;
                 }
 
                 if (mapIndex == -1 && (gameModeMap?.Map?.Equals(GameModeMap?.Map) ?? false))
                 {
-                    mapIndex = i;
+                    mapIndex = i - skippedMapsCount;
                     gameModeMapChanged = true;
                 }
             }
@@ -935,8 +936,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             Logger.Log("PickRandomMap: Rolled " + randomValue + " out of " + maps.Count + ". Picked map: " + Map.Name);
 
             ChangeMap(GameModeMap);
-            //tbMapSearch.Text = string.Empty;
-            //tbMapSearch.OnSelectedChanged();
+            tbMapSearch.Text = string.Empty;
+            tbMapSearch.OnSelectedChanged();
             ListMaps();
         }
 
@@ -1038,18 +1039,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             List<Map> mapList = new List<Map>();
             for (int i = 0; i < maps.Count; i++)
             {
-                if (tbMapSearch.Text != tbMapSearch.Suggestion)
-                {
-                    string promptUpper = tbMapSearch.Text.ToUpperInvariant();
-                    bool mapMatches = maps[i].Name.ToUpperInvariant().Contains(promptUpper)
-                        || maps[i].UntranslatedName.ToUpperInvariant().Contains(promptUpper);
-
-                    if (!mapMatches)
-                    {
-                        continue;
-                    }
-                }
-
                 if (!ddplayerNumbers.SelectedItem.Text.Contains("-"))
                 {
                     if (maps[i].MaxPlayers != int.Parse(ddplayerNumbers.SelectedItem.Text))
