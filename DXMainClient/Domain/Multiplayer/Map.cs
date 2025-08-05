@@ -309,7 +309,7 @@ namespace DTAClient.Domain.Multiplayer
 
                 Author = section.GetStringValue("Author", "Unknown author".L10N("INI:Maps:MapInfoUnknown"));
                 GameModes = section.GetStringValue("GameModes", "Default").Split(',');
-                Theater = section.GetStringValue("Theater", "Unknown".L10N("INI:Maps:MapInfoUnknown"));
+                Theater = section.GetStringValue("Theater", "Unknown");
 
                 MinPlayers = section.GetIntValue("MinPlayers", 0);
                 MaxPlayers = section.GetIntValue("MaxPlayers", 0);
@@ -554,7 +554,7 @@ namespace DTAClient.Domain.Multiplayer
                 if (!Official) AddPrefix();
 
                 Author = basicSection.GetStringValue("Author", "Unknown author".L10N("INI:Maps:MapInfoUnknown"));
-                Theater = iniFile.GetStringValue("Map", "Theater", "Unknown".L10N("INI:Maps:MapInfoUnknown"));
+                Theater = iniFile.GetStringValue("Map", "Theater", "Unknown");
 
                 string gameModesString = basicSection.GetStringValue("GameModes", string.Empty);
                 if (string.IsNullOrEmpty(gameModesString))
