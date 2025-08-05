@@ -307,9 +307,9 @@ namespace DTAClient.Domain.Multiplayer
 
                 if (!Official) AddPrefix();
 
-                Author = section.GetStringValue("Author", "Unknown author");
+                Author = section.GetStringValue("Author", "Unknown author".L10N("INI:Maps:MapInfoUnknown"));
                 GameModes = section.GetStringValue("GameModes", "Default").Split(',');
-                Theater = section.GetStringValue("Theater", "Unknown".L10N("INI:Maps:MapTheaterUnknown"));
+                Theater = section.GetStringValue("Theater", "Unknown".L10N("INI:Maps:MapInfoUnknown"));
 
                 MinPlayers = section.GetIntValue("MinPlayers", 0);
                 MaxPlayers = section.GetIntValue("MaxPlayers", 0);
@@ -553,7 +553,8 @@ namespace DTAClient.Domain.Multiplayer
 
                 if (!Official) AddPrefix();
 
-                Author = basicSection.GetStringValue("Author", "Unknown author");
+                Author = basicSection.GetStringValue("Author", "Unknown author".L10N("INI:Maps:MapInfoUnknown"));
+                Theater = iniFile.GetStringValue("Map", "Theater", "Unknown".L10N("INI:Maps:MapInfoUnknown"));
 
                 string gameModesString = basicSection.GetStringValue("GameModes", string.Empty);
                 if (string.IsNullOrEmpty(gameModesString))
@@ -619,7 +620,6 @@ namespace DTAClient.Domain.Multiplayer
 
                 localSize = iniFile.GetStringValue("Map", "LocalSize", "0,0,0,0").Split(',');
                 actualSize = iniFile.GetStringValue("Map", "Size", "0,0,0,0").Split(',');
-                Theater = iniFile.GetStringValue("Map", "Theater", "Unknown".L10N("INI:Maps:MapTheaterUnknown"));
 
                 if (MainClientConstants.USE_ISOMETRIC_CELLS)
                 {
