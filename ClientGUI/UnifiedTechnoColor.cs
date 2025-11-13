@@ -5,7 +5,7 @@ using Rampastring.Tools;
 using System;
 using System.Collections.Generic;
 
-namespace DTAConfig
+namespace ClientGUI
 {
     /// <summary>
     /// A color for gameoptions.

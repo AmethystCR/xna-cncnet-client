@@ -391,7 +391,7 @@ namespace DTAClient.DXGUI.Campaign
             UserINISettings.Instance.Difficulty.Value = trbDifficultySelector.Value;
             UserINISettings.Instance.AutoSaveInterval.Value = trbAutoSaveInterval.Value;
 
-            spawnIniSettings.AddKey("AutoSaveInterval", (int)(UserINISettings.Instance.AutoSaveInterval.Value * INTERVAL_SCALE));
+            spawnIniSettings.AddKey("AutoSaveInterval", (UserINISettings.Instance.AutoSaveInterval.Value * INTERVAL_SCALE).ToString(CultureInfo.InvariantCulture));
             spawnIniSettings.AddKey("DifficultyModeHuman", mission.PlayerAlwaysOnNormalDifficulty ? "1" : trbDifficultySelector.Value.ToString(CultureInfo.InvariantCulture));
             spawnIniSettings.AddKey("DifficultyModeComputer", GetComputerDifficulty().ToString(CultureInfo.InvariantCulture));
 

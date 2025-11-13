@@ -1,6 +1,5 @@
 ﻿using ClientCore.Extensions;
 using ClientCore;
-using ClientGUI;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Rampastring.Tools;
@@ -11,7 +10,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace DTAConfig
+namespace ClientGUI
 {
     /// <summary>
     /// A window for configuring in-game unified colors.
