@@ -1,4 +1,4 @@
-﻿using ClientCore;
+using ClientCore;
 using DTAClient.Domain.Multiplayer;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -488,6 +488,13 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
             List<Point> startingLocations = GameModeMap.Map.GetStartingLocationPreviewCoords(new Point(previewTexture.Width, previewTexture.Height));
 
+            // Disable all indicators to be able updated after changing
+            // locations when 2 or more of them have same location (RA1 specifics)
+            foreach (var indicator in startingLocationIndicators)
+            {
+                indicator.Disable();
+            }
+            
             for (int i = 0; i < startingLocations.Count && i < GameModeMap.Map.MaxPlayers; i++)
             {
                 PlayerLocationIndicator indicator = startingLocationIndicators[i];
@@ -500,12 +507,6 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 indicator.Enabled = true;
                 indicator.Visible = true;
             }
-
-            for (int i = startingLocations.Count; i < MAX_STARTING_LOCATIONS; i++)
-            {
-                startingLocationIndicators[i].Disable();
-            }
-
 
             foreach (var mapExtraTexture in GameModeMap.Map.GetExtraMapPreviewTextures())
             {
@@ -560,7 +561,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
 
         public void RefreshFavoriteBtn()
         {
-            bool isFav = UserINISettings.Instance.IsFavoriteMap(GameModeMap?.Map.UntranslatedName, GameModeMap?.GameMode.Name);
+            bool isFav = UserINISettings.Instance.IsFavoriteMap(GameModeMap?.Map.SHA1, GameModeMap?.Map.UntranslatedName, GameModeMap?.GameMode.Name);
             var textureName = isFav ? "favActive.png" : "favInactive.png";
             var hoverTextureName = isFav ? "favActive_c.png" : "favInactive_c.png";
             var hoverTexture = AssetLoader.AssetExists(hoverTextureName) ? AssetLoader.LoadTexture(hoverTextureName) : null;
