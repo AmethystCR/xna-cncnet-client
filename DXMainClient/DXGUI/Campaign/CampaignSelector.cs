@@ -55,6 +55,9 @@ namespace DTAClient.DXGUI.Campaign
         private XNALabel lblDifficultyLevelValue;
         private XNALabel lblAutoSaveIntervalValue;
 
+        private XNAClientCheckBox chkPhobosOptions01;
+        private XNAClientCheckBox chkPhobosOptions02;
+
         private CheaterWindow cheaterWindow;
         
         public List<CampaignCheckBox> CheckBoxes { get; } = new();
@@ -193,6 +196,16 @@ namespace DTAClient.DXGUI.Campaign
             lblAutoSaveIntervalValue.ClientRectangle = new Rectangle(tbMissionDescription.Right - lblAutoSaveIntervalValue.Width, 
                 lblAutoSaveInterval.Y, 1, 1);
 
+            chkPhobosOptions01 = new XNAClientCheckBox(WindowManager);
+            chkPhobosOptions01.Name = nameof(chkPhobosOptions01);
+            chkPhobosOptions01.Text = "PhobosOptions01".L10N("Client:Main:chkPhobosOptions01");
+            chkPhobosOptions01.ClientRectangle = new Rectangle(0, 0, 0, 0);
+
+            chkPhobosOptions02 = new XNAClientCheckBox(WindowManager);
+            chkPhobosOptions02.Name = nameof(chkPhobosOptions02);
+            chkPhobosOptions02.Text = "PhobosOptions02".L10N("Client:Main:chkPhobosOptions02");
+            chkPhobosOptions02.ClientRectangle = new Rectangle(0, 0, 0, 0);
+
             btnLaunch = new XNAClientButton(WindowManager);
             btnLaunch.Name = nameof(btnLaunch);
             btnLaunch.ClientRectangle = new Rectangle(12, Height - 35, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
@@ -222,6 +235,8 @@ namespace DTAClient.DXGUI.Campaign
             AddChild(lblAutoSaveInterval);
             AddChild(trbAutoSaveInterval);
             AddChild(lblAutoSaveIntervalValue);
+            AddChild(chkPhobosOptions01);
+            AddChild(chkPhobosOptions02);
 
             gameOptionsIni = new IniFile(SafePath.CombineFilePath(ProgramConstants.GetBaseResourcePath(),
                 ClientConfiguration.GAME_OPTIONS));
@@ -562,6 +577,9 @@ namespace DTAClient.DXGUI.Campaign
                     settingsIni.SetStringValue("GameOptions", cb.Name, cb.Checked.ToString());
 
                 settingsIni.WriteIniFile();
+
+                UserINISettings.Instance.PhobosOptions01.Value = chkPhobosOptions01.Checked;
+                UserINISettings.Instance.PhobosOptions02.Value = chkPhobosOptions02.Checked;
             }
             catch (Exception ex)
             {
@@ -589,6 +607,9 @@ namespace DTAClient.DXGUI.Campaign
 
             foreach (CampaignCheckBox cb in CheckBoxes)
                 cb.Checked = settingsIni.GetBooleanValue("GameOptions", cb.Name, cb.Checked);
+
+            chkPhobosOptions01.Checked = UserINISettings.Instance.PhobosOptions01;
+            chkPhobosOptions02.Checked = UserINISettings.Instance.PhobosOptions02;
         }
 
         public override void Draw(GameTime gameTime)
