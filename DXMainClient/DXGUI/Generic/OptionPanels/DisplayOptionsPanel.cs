@@ -340,7 +340,7 @@ namespace DTAClient.DXGUI.Generic.OptionPanels
             lblCompatibilityFixes = new XNALabel(WindowManager);
             lblCompatibilityFixes.Name = "lblCompatibilityFixes";
             lblCompatibilityFixes.FontIndex = 1;
-            lblCompatibilityFixes.Text = "Legacy Compatibility Fixes:";
+            lblCompatibilityFixes.Text = "Legacy Compatibility Fixes:".L10N("Client:DTAConfig:TSCompatibilityFixLegacy");
             AddChild(lblCompatibilityFixes);
             lblCompatibilityFixes.CenterOnParent();
             lblCompatibilityFixes.Y = Height - 97;
@@ -349,7 +349,7 @@ namespace DTAClient.DXGUI.Generic.OptionPanels
             lblGameCompatibilityFix.Name = "lblGameCompatibilityFix";
             lblGameCompatibilityFix.ClientRectangle = new Rectangle(132,
                 lblCompatibilityFixes.Bottom + 20, 0, 0);
-            lblGameCompatibilityFix.Text = "DTA/TI/TS Compatibility Fix:";
+            lblGameCompatibilityFix.Text = "DTA/TI/TS Compatibility Fix:".L10N("Client:DTAConfig:TSCompatibilityFix");
 
             btnGameCompatibilityFix = new XNAClientButton(WindowManager);
             btnGameCompatibilityFix.Name = "btnGameCompatibilityFix";
@@ -357,7 +357,7 @@ namespace DTAClient.DXGUI.Generic.OptionPanels
                 lblGameCompatibilityFix.Right + 20,
                 lblGameCompatibilityFix.Y - 4, 133, 23);
             btnGameCompatibilityFix.FontIndex = 1;
-            btnGameCompatibilityFix.Text = "Disable";
+            btnGameCompatibilityFix.Text = "Disable".L10N("Client:DTAConfig:TSDisable");
             btnGameCompatibilityFix.LeftClick += BtnGameCompatibilityFix_LeftClick;
 
             lblMapEditorCompatibilityFix = new XNALabel(WindowManager);
@@ -365,7 +365,7 @@ namespace DTAClient.DXGUI.Generic.OptionPanels
             lblMapEditorCompatibilityFix.ClientRectangle = new Rectangle(
                 lblGameCompatibilityFix.X,
                 lblGameCompatibilityFix.Bottom + 20, 0, 0);
-            lblMapEditorCompatibilityFix.Text = "FinalSun Compatibility Fix:";
+            lblMapEditorCompatibilityFix.Text = "FinalSun Compatibility Fix:".L10N("Client:DTAConfig:TSFinalSunFix");
 
             btnMapEditorCompatibilityFix = new XNAClientButton(WindowManager);
             btnMapEditorCompatibilityFix.Name = "btnMapEditorCompatibilityFix";
@@ -375,7 +375,7 @@ namespace DTAClient.DXGUI.Generic.OptionPanels
                 btnGameCompatibilityFix.Width,
                 btnGameCompatibilityFix.Height);
             btnMapEditorCompatibilityFix.FontIndex = 1;
-            btnMapEditorCompatibilityFix.Text = "Disable";
+            btnMapEditorCompatibilityFix.Text = "Disable".L10N("Client:DTAConfig:TSDisable");
             btnMapEditorCompatibilityFix.LeftClick += BtnMapEditorCompatibilityFix_LeftClick;
 
             AddChild(lblGameCompatibilityFix);
@@ -485,7 +485,7 @@ namespace DTAClient.DXGUI.Generic.OptionPanels
                     regKey = regKey.CreateSubKey("Tiberian Sun Client");
                     regKey.SetValue("FSCompatFixInstalled", "No");
 
-                    btnMapEditorCompatibilityFix.Text = "Enable".L10N("Client:DTAConfig:TSFEnable");
+                    btnMapEditorCompatibilityFix.Text = "Enable".L10N("Client:DTAConfig:TSButtonEnable");
 
                     Logger.Log("FinalSun Compatibility Fix succesfully uninstalled.");
                     XNAMessageBox.Show(WindowManager, "Compatibility Fix Uninstalled".L10N("Client:DTAConfig:TSFinalSunFixUninstallTitle"),
