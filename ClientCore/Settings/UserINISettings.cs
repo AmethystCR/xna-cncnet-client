@@ -154,8 +154,6 @@ namespace ClientCore
             CustomComponentsDenied = new BoolSetting(iniFile, OPTIONS, "CustomComponentsDenied", false);
             Difficulty = new IntSetting(iniFile, OPTIONS, "Difficulty", 1);
             AutoSaveInterval = new IntSetting(iniFile, OPTIONS, "AutoSaveInterval", 4);
-            PhobosOptions01 = new BoolSetting(iniFile, "Phobos", "SaveGameOnScenarioStart", true);
-            PhobosOptions02 = new BoolSetting(iniFile, "Phobos", "ShowBriefing", false);
             ScrollDelay = new IntSetting(iniFile, OPTIONS, "ScrollDelay", 4);
             GameSpeed = new IntSetting(iniFile, OPTIONS, "GameSpeed", 1);
             PreloadMapPreviews = new BoolSetting(iniFile, VIDEO, "PreloadMapPreviews", false);
@@ -297,9 +295,6 @@ namespace ClientCore
         public IntSetting Difficulty { get; private set; }
 
         public IntSetting AutoSaveInterval { get; private set; }
-
-        public BoolSetting PhobosOptions01 { get; private set; }
-        public BoolSetting PhobosOptions02 { get; private set; }
 
         public IntSetting GameSpeed { get; private set; }
 
