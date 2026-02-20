@@ -60,7 +60,8 @@ namespace DTAClient.DXGUI.Generic
             ManualUpdateQueryWindow manualUpdateQueryWindow,
             UpdateWindow updateWindow,
             CreditsWindow creditsWindow,
-            ExtrasWindow extrasWindow
+            ExtrasWindow extrasWindow,
+            DirectDrawWrapperManager directDrawWrapperManager
         ) : base(windowManager)
         {
             this.lanLobby = lanLobby;
@@ -84,6 +85,7 @@ namespace DTAClient.DXGUI.Generic
             this.updateWindow = updateWindow;
             this.creditsWindow = creditsWindow;
             this.extrasWindow = extrasWindow;
+            this.directDrawWrapperManager = directDrawWrapperManager;
 
             this.cncnetLobby.UpdateCheck += CncnetLobby_UpdateCheck;
             isMediaPlayerAvailable = IsMediaPlayerAvailable();
@@ -124,6 +126,7 @@ namespace DTAClient.DXGUI.Generic
         private readonly UpdateWindow updateWindow;
         private readonly CreditsWindow creditsWindow;
         private readonly ExtrasWindow extrasWindow;
+        private readonly DirectDrawWrapperManager directDrawWrapperManager;
 
         private XNAMessageBox firstRunMessageBox;
 
@@ -964,6 +967,11 @@ namespace DTAClient.DXGUI.Generic
 
                 }.Show();
             };
+
+#if ISWINDOWS
+            if (!directDrawWrapperManager.SelectedRenderer.IsDummy)
+                DirectDrawCompatibilityChecker.CheckAndPromptFix(WindowManager);
+#endif
         }
 
         private void LoadThemeSong()
@@ -1199,7 +1207,7 @@ namespace DTAClient.DXGUI.Generic
         }
 
         private void ManualUpdateQueryWindow_Closed(object sender, EventArgs e)
-            => updateQueryWindow.Enable();
+            => manualUpdateQueryWindow.Disable();
 
         #endregion
 

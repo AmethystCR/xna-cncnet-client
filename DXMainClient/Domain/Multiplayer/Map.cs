@@ -63,19 +63,31 @@ namespace DTAClient.Domain.Multiplayer
 
         public void AddPrefix()
         {
-            Name = "[Custom]".L10N("INI:Maps:CustomMapPrefix") + " " + Name;
+            UntranslatedName = "[Custom]".L10N("INI:Maps:CustomMapPrefix") + " " + UntranslatedName;
         }
 
         /// <summary>
         /// The name of the map.
         /// </summary>
-        [JsonInclude]
-        public string Name { get; set; }
+        [JsonIgnore]
+        public string Name => !Official || string.IsNullOrEmpty(UntranslatedName) || string.IsNullOrEmpty(BaseFilePath)
+            ? UntranslatedName
+            : UntranslatedName.L10N($"INI:Maps:{BaseFilePath}:Description");
 
         /// <summary>
         /// The original untranslated name of the map.
         /// </summary>
-        public string UntranslatedName { get; private set; }
+        [JsonInclude]
+        public string UntranslatedName
+        {
+            get => field;
+            private set
+            {
+                field = value;
+                // Force triggering localization of the name now
+                _ = Name;
+            }
+        }
 
         /// <summary>
         /// The maximum amount of players supported by the map.
@@ -138,7 +150,7 @@ namespace DTAClient.Domain.Multiplayer
         /// <summary>
         /// The calculated SHA1 of the map.
         /// </summary>
-        [JsonIgnore]
+        [JsonInclude]
         public string SHA1 { get; private set; }
 
         /// <summary>
@@ -237,9 +249,6 @@ namespace DTAClient.Domain.Multiplayer
         public int height;
 
         [JsonIgnore]
-        private IniFile customMapIni;
-
-        [JsonIgnore]
         private readonly string customMapFilePath;
 
         [JsonInclude]
@@ -257,6 +266,7 @@ namespace DTAClient.Domain.Multiplayer
         [JsonIgnore]
         public List<TeamStartMapping> TeamStartMappings => TeamStartMappingPresets?.FirstOrDefault()?.TeamStartMappings;
 
+        // TODO: move preview texture caching out of the Map class
         [JsonIgnore]
         public Texture2D PreviewTexture { get; set; }
 
@@ -302,8 +312,6 @@ namespace DTAClient.Domain.Multiplayer
                 var section = iniFile.GetSection(BaseFilePath);
 
                 UntranslatedName = section.GetStringValue("Description", "Unnamed map");
-                Name = UntranslatedName
-                    .L10N($"INI:Maps:{BaseFilePath}:Description");
 
                 if (!Official) AddPrefix();
 
@@ -510,24 +518,22 @@ namespace DTAClient.Domain.Multiplayer
             return GetTDRACellPixelCoord(mapPoint.X, mapPoint.Y, x, y, width, height, previewSize);
         }
 
-        /// <summary>
-        /// Due to caching, this may not have been loaded on application start.
-        /// This function provides the ability to load when needed.
-        /// </summary>
-        /// <returns>Returns the loaded INI file of a custom map.</returns>
-        private IniFile GetCustomMapIniFile()
+        /// <summary>Returns the loaded INI file of a custom map.</summary>
+        private IniFile GetCustomMapIniFile(bool loadPreviewTextureSection = true)
         {
-            if (customMapIni != null)
-                return customMapIni;
-
-            customMapIni = new IniFile { FileName = SafePath.CombineFilePath(customMapFilePath) };
+            var customMapIni = new IniFile { FileName = SafePath.CombineFilePath(customMapFilePath) };
             customMapIni.AddSection("Basic");
             customMapIni.AddSection("Map");
             customMapIni.AddSection("Waypoints");
-            customMapIni.AddSection("Preview");
-            customMapIni.AddSection("PreviewPack");
             customMapIni.AddSection("ForcedOptions");
             customMapIni.AddSection("ForcedSpawnIniOptions");
+
+            // Optionally load preview sections, to accelerate building custom map caches without reading preview.
+            if (loadPreviewTextureSection)
+            {
+                customMapIni.AddSection("Preview");
+                customMapIni.AddSection("PreviewPack");
+            }
             customMapIni.AllowNewSections = false;
             customMapIni.Parse();
 
@@ -545,11 +551,11 @@ namespace DTAClient.Domain.Multiplayer
 
             try
             {
-                IniFile iniFile = GetCustomMapIniFile();
+                IniFile iniFile = GetCustomMapIniFile(loadPreviewTextureSection: false);
 
                 IniSection basicSection = iniFile.GetSection("Basic");
 
-                UntranslatedName = Name = basicSection.GetStringValue("Name", "Unnamed map");
+                UntranslatedName = basicSection.GetStringValue("Name", "Unnamed map");
 
                 if (!Official) AddPrefix();
 
@@ -636,7 +642,7 @@ namespace DTAClient.Domain.Multiplayer
 
                 for (int i = 0; i < MAX_PLAYERS; i++)
                 {
-                    string waypoint = GetCustomMapIniFile().GetStringValue("Waypoints", i.ToString(CultureInfo.InvariantCulture), string.Empty);
+                    string waypoint = iniFile.GetStringValue("Waypoints", i.ToString(CultureInfo.InvariantCulture), string.Empty);
 
                     if (string.IsNullOrEmpty(waypoint))
                         break;
@@ -659,10 +665,15 @@ namespace DTAClient.Domain.Multiplayer
         }
 
         // Ran after the map has been loaded from cache if it is a custom map.
-        public void AfterDeserialize()
+        public void AfterDeserialize(bool recalculateSHA = true)
         {
-            CalculateSHA();
-            UntranslatedName = Name;
+            if (recalculateSHA)
+            {
+                // Instead of doing so, we should just remove the Map object from cache when the map file changes.
+                // Otherwise, the metadata can be out of date.
+                Debug.Assert(false, "The map SHA1 should not be recalculated after deserialization. Remove the Map object from cache when the map file changes instead.");
+                CalculateSHA();
+            }
         }
 
         private void ParseForcedOptions(IniFile iniFile, string forcedOptionsSection)
@@ -715,7 +726,8 @@ namespace DTAClient.Domain.Multiplayer
             if (!Official)
             {
                 // Extract preview from the map itself
-                using Image preview = MapPreviewExtractor.ExtractMapPreview(GetCustomMapIniFile());
+                // TODO: implement a global cache for the preview texture. Don't cache either the texture or the map ini in the Map object itself.
+                using Image preview = MapPreviewExtractor.ExtractMapPreview(GetCustomMapIniFile(loadPreviewTextureSection: true));
 
                 if (preview != null)
                 {
