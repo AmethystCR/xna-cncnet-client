@@ -276,6 +276,8 @@ namespace DTAClient.DXGUI.Campaign
 
             trbDifficultySelector.Value = UserINISettings.Instance.Difficulty;
             trbAutoSaveInterval.Value = UserINISettings.Instance.AutoSaveInterval;
+            UpdateDifficultyLevelValue();
+            UpdateAutoSaveIntervalValue();
 
             userSettings.AddRange(Children.OfType<IUserSetting>());
 
@@ -298,7 +300,10 @@ namespace DTAClient.DXGUI.Campaign
             LoadSettings();
         }
 
-        private void TrbDifficultySelector_ValueChanged(object sender, EventArgs e)
+        private void TrbDifficultySelector_ValueChanged(object sender, EventArgs e) =>
+            UpdateDifficultyLevelValue();
+
+        private void UpdateDifficultyLevelValue()
         {
             if (trbDifficultySelector.Value == 0)
                 lblDifficultyLevelValue.Text = "EASY".L10N("Client:Main:DifficultyEasy");
@@ -307,7 +312,11 @@ namespace DTAClient.DXGUI.Campaign
             else
                 lblDifficultyLevelValue.Text = "HARD".L10N("Client:Main:DifficultyHard");
         }
-        private void TrbAutoSaveInterval_ValueChanged(object sender, EventArgs e)
+
+        private void TrbAutoSaveInterval_ValueChanged(object sender, EventArgs e) =>
+            UpdateAutoSaveIntervalValue();
+
+        private void UpdateAutoSaveIntervalValue()
         {
             lblAutoSaveIntervalValue.Text = (trbAutoSaveInterval.Value * INTERVAL_SCALE).ToString();
         }
