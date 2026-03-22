@@ -473,6 +473,16 @@ namespace DTAClient.DXGUI.Multiplayer
 
                     break;
 
+                case "GAMECLOSED":
+                    int closedGameIndex = lbGameList.HostedGames.FindIndex(g => ((HostedLANGame)g).EndPoint.Equals(endPoint));
+                    if (closedGameIndex > -1)
+                    {
+                        lbGameList.HostedGames.RemoveAt(closedGameIndex);
+                        lbGameList.Refresh();
+                    }
+
+                    break;
+
                 case "GAME":
                     if (user == null)
                         return;
@@ -541,7 +551,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
             if (hg.Locked)
             {
-                AddChatMessage("The selected game is locked!".L10N("Client:Main:GameLocked"));
+                AddChatMessage(string.Format("The game {0} is locked!".L10N("Client:Main:GameLockedWithName"), hg.RoomName));
                 return;
             }
 
