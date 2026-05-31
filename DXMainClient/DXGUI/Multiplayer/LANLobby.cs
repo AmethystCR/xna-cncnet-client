@@ -195,7 +195,7 @@ namespace DTAClient.DXGUI.Multiplayer
             chatColors = new LANColor[]
             {
                 new LANColor("Gray".L10N("Client:Main:ColorGray"), Color.Gray),
-                new LANColor("Metalic".L10N("Client:Main:ColorLightGrayMetalic"), Color.LightGray),
+                new LANColor("Metallic".L10N("Client:Main:ColorLightGrayMetallic"), Color.LightGray),
                 new LANColor("Green".L10N("Client:Main:ColorGreen"), Color.ForestGreen),
                 new LANColor("Lime Green".L10N("Client:Main:ColorLimeGreen"), Color.LimeGreen),
                 new LANColor("Green Yellow".L10N("Client:Main:ColorGreenYellow"), Color.GreenYellow),
@@ -574,7 +574,7 @@ namespace DTAClient.DXGUI.Multiplayer
 
             if (hg.GameVersion != ProgramConstants.GAME_VERSION)
             {
-                // TODO Show warning
+                AddChatMessage(new ChatMessage(Color.Yellow, "The game host is on a different game version than you. Version incompatibilities may cause issues.".L10N("Client:Main:JoinGameVersionMismatch")));
             }
 
             AddChatMessage(string.Format("Attempting to join game {0} ...".L10N("Client:Main:AttemptJoin"), hg.RoomName));
