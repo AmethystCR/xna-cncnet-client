@@ -1201,16 +1201,8 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
                 }
                 else
                 {
-                    if (GameMode?.MaxPlayersOverride != null)
-                    {
-                        if (playerCount != GameMode.MaxPlayersOverride)
-                            continue;
-                    }
-                    else
-                    {
-                        if (gameModeMaps[i].MaxPlayers != playerCount)
-                            continue;
-                    }
+                    if (gameModeMaps[i].MaxPlayers != playerCount)
+                        continue;
                 }
                 if (!ddAuthor.SelectedItem.Text.Contains("-"))
                 {
