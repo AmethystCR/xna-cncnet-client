@@ -75,17 +75,21 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
         {
             Logger.Log($"Random Map Generating...");
             base.BtnGenerateMap_LeftClick(sender, e);
-            Logger.Log($"Random Map {RandomMapName}.map Generate Completed !");
-            LoadCustomMap(RandomMapName);
-        }
 
-        private void LoadCustomMap(string mapName)
-        {
-            Map map = MapLoader.LoadCustomMap($"Maps\\{ClientConfiguration.Instance.CustomMapFolderName}\\{mapName}", out string resultMessage);
+            string tempmapPath = SafePath.CombineFilePath(ProgramConstants.GamePath,
+                $"Maps/{ClientConfiguration.Instance.CustomMapFolderName}/{RandomMapName}.tmp");
+            string finalmapPath = SafePath.CombineFilePath(ProgramConstants.GamePath,
+                $"Maps/{ClientConfiguration.Instance.CustomMapFolderName}/{RandomMapName}.{ClientConfiguration.Instance.MapFileExtension}");
 
-            if (map == null)
-                return;
-            ListMaps();
+            if (File.Exists(tempmapPath))
+            {
+                File.Move(tempmapPath, finalmapPath);
+                Logger.Log($"Random Map {RandomMapName}.map Generate Completed !");
+            }
+            else
+            {
+                Logger.Log($"Random Map generation failed: temp map file not found at {tempmapPath}");
+            }
         }
 
         protected override void ToggleFavoriteMap()

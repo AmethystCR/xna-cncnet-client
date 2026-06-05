@@ -237,9 +237,21 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             Logger.Log($"Random Map Generating...");
             base.BtnGenerateMap_LeftClick(sender, e);
 
-            AddNotice(string.Format("Random Map {0}.map Generate Completed !".L10N("Client:Main:RandomMapGenerateCompleted"), RandomMapName));
-            Logger.Log($"Random Map {RandomMapName}.map Generate Completed !");
-            LoadCustomMap(RandomMapName);
+            string tempmapPath = SafePath.CombineFilePath(ProgramConstants.GamePath,
+                $"Maps/{ClientConfiguration.Instance.CustomMapFolderName}/{RandomMapName}.tmp");
+            string finalmapPath = SafePath.CombineFilePath(ProgramConstants.GamePath,
+                $"Maps/{ClientConfiguration.Instance.CustomMapFolderName}/{RandomMapName}.{ClientConfiguration.Instance.MapFileExtension}");
+
+            if (File.Exists(tempmapPath))
+            {
+                File.Move(tempmapPath, finalmapPath);
+                AddNotice(string.Format("Random Map {0}.map Generate Completed !".L10N("Client:Main:RandomMapGenerateCompleted"), RandomMapName));
+                Logger.Log($"Random Map {RandomMapName}.map Generate Completed !");
+            }
+            else
+            {
+                Logger.Log($"Random Map generation failed: temp map file not found at {tempmapPath}");
+            }
         }
 
         /// <summary>

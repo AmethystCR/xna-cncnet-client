@@ -349,6 +349,7 @@ namespace DTAClient.DXGUI.Multiplayer.GameLobby
             chkRenderFullMap.Name = "chkRenderFullMap";
             chkRenderFullMap.ClientRectangle = new Rectangle(chkDamagedBuilding.X + 110, chkDamagedBuilding.Y, 0, 0);
             chkRenderFullMap.Text = "Render Full Map".L10N("Client:Main:RenderFullMap");
+            chkRenderFullMap.Checked = true;
             AddChild(chkRenderFullMap);
 
             AddChild(btnGenerateMap);
