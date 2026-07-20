@@ -44,7 +44,6 @@ namespace DTAClient.DXGUI.Generic
             BackgroundTexture = AssetLoader.LoadTexture("loadmissionbg.png");
 
             ClientRectangle = new Rectangle(0, 0, 600, 380);
-            CenterOnParent();
 
             lbSaveGameList = new XNAMultiColumnListBox(WindowManager);
             lbSaveGameList.Name = nameof(lbSaveGameList);
@@ -82,6 +81,8 @@ namespace DTAClient.DXGUI.Generic
             AddChild(btnCancel);
 
             base.Initialize();
+
+            CenterOnParent();
 
             ListSaves();
         }
