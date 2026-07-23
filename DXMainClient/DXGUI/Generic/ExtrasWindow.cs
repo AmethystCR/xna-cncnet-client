@@ -47,7 +47,7 @@ namespace DTAClient.DXGUI.Generic
             btnExCredits.LeftClick += BtnExCredits_LeftClick;
 
             var btnExDatabase = new XNAClientButton(WindowManager);
-            btnExDatabase.Name = "btnExDatabase";
+            btnExDatabase.Name = nameof(btnExDatabase);
             btnExDatabase.ClientRectangle = new Rectangle(76, 143, UIDesignConstants.BUTTON_WIDTH_133, UIDesignConstants.BUTTON_HEIGHT);
             btnExDatabase.Text = "Database".L10N("Client:Main:Database");
             btnExDatabase.LeftClick += BtnExDatabase_LeftClick;
