@@ -25,7 +25,7 @@ using Rampastring.XNAUI.XNAControls;
 
 namespace DTAClient.DXGUI.Campaign
 {
-    public class CampaignSelector : XNAWindow
+    public partial class CampaignSelector : XNAWindow
     {
         private const int DEFAULT_WIDTH = 650;
         private const int DEFAULT_HEIGHT = 600;
@@ -306,6 +306,9 @@ namespace DTAClient.DXGUI.Campaign
             // Center on screen
             CenterOnParent();
 
+            // World map globe background.
+            InitializeWorldMap();
+
             trbDifficultySelector.Value = UserINISettings.Instance.Difficulty;
             trbAutoSaveInterval.Value = UserINISettings.Instance.AutoSaveInterval;
             UpdateDifficultyLevelValue();
@@ -350,6 +353,8 @@ namespace DTAClient.DXGUI.Campaign
 
         private void LbCampaignList_SelectedIndexChanged(object sender, EventArgs e)
         {
+            UpdateWorldMap();
+
             if (lbCampaignList.SelectedIndex == -1)
             {
                 tbMissionDescription.Text = string.Empty;

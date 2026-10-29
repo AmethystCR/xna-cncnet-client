@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Security.Cryptography;
@@ -15,7 +15,7 @@ namespace DTAClient.Domain
     /// <summary>
     /// A Tiberian Sun mission listed in Battle(E).ini.
     /// </summary>
-    public class Mission
+    public partial class Mission
     {
         public Mission(IniSection missionSection, string missionCodeName)
         {
@@ -48,6 +48,7 @@ namespace DTAClient.Domain
             CodeName = missionCodeName;
             CustomMissionID = ComputeCustomMissionID(missionCodeName);
             PreviewImage = missionSection.GetStringValue("PreviewImage", string.Empty);
+            ParseWorldMapData(missionSection);
         }
 
         public static Mission NewCustomMission(IniSection clientMissionConfigSection, string missionCodeName, string scenario, IniSection? gameMissionConfigSection)
