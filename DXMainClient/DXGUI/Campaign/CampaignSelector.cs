@@ -55,7 +55,7 @@ namespace DTAClient.DXGUI.Campaign
 
         private XNAPanel pnlMissionPreview;
         private bool pnlMissionPreviewBackgroundTextureNeedsDispose = false;
-        private string missionPreviewFolder => SafePath.CombineDirectoryPath(ProgramConstants.GetBaseResourcePath(), "Mission Previews");
+        private string missionPreviewFolder => SafePath.CombineDirectoryPath(ProgramConstants.GetBaseResourcePath(), "MissionPreviews");
         private string defaultMissionPreviewPath => SafePath.CombineFilePath(missionPreviewFolder, "Default.png");
         private bool pnlMissionPreviewEnabled => File.Exists(defaultMissionPreviewPath);
 
