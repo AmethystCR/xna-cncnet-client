@@ -19,8 +19,8 @@ namespace DTAClient.DXGUI.Campaign
         // Leave both at -1 to center it vertically.
         // Set exactly one to >= 0 to anchor the globe that many pixels from the
         // top or bottom edge of the campaign window. Top takes precedence if both are set.
-        private static readonly int GLOBE_TOP_MARGIN = 0;
-        private static readonly int GLOBE_BOTTOM_MARGIN = -1;
+        private static readonly int GLOBE_TOP_MARGIN = -1;
+        private static readonly int GLOBE_BOTTOM_MARGIN = 160;
 
         private RotatingEarthBackground rotatingEarth;
 
@@ -32,7 +32,8 @@ namespace DTAClient.DXGUI.Campaign
             {
                 ClientRectangle = new Rectangle(0, 0, Width, Height),
                 InputEnabled = false,
-                DrawOrder = -200,
+                DrawOrder = 100,
+				UpdateOrder = 100,
                 GlobeDiameter = globeDiameter
             };
 

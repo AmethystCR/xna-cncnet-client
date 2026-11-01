@@ -256,8 +256,7 @@ namespace DTAClient.DXGUI.Campaign
                 pnlMissionPreview.ClientRectangle = new Rectangle(
                     tbMissionDescription.X,
                     tbMissionDescription.Bottom + 12,
-                    tbMissionDescription.Width,
-                    200);
+                    440, 165);
 
                 pnlMissionPreview.PanelBackgroundDrawMode = PanelBackgroundImageDrawMode.STRETCHED;
 
